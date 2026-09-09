@@ -50,7 +50,7 @@ export default function LocationTeaser() {
                     Address
                   </p>
                   <p className="text-brand-cream-muted">
-                    42 Rosmead Place, Colombo 07, Sri Lanka
+                    142 Galle Road, Dehiwala, Sri Lanka
                   </p>
                 </div>
               </div>

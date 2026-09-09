@@ -8,9 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 // MOCK DATA & IMAGES (From user's specification)
 // ==========================================
 const SLIDER_IMAGES = [
-  "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2574&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1600334129128-685c5582fc35?q=80&w=2670&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=2669&auto=format&fit=crop",
+  "/images/background/mostafa_meraji-salon-6964527_1920.jpg",
+  "/images/background/sunriseforever-beauty-salon-4043096_1920.jpg",
+  "/images/background/female-hairstylist-drying-curly-girl-s-hair-using-big-plastic-brush.jpg",
 ];
 
 const SERVICES = [
@@ -19,46 +19,94 @@ const SERVICES = [
     title: "Signature Haircut",
     price: "From $85",
     desc: "Tailored to your unique bone structure and lifestyle.",
-    img: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1000&auto=format&fit=crop",
+    img: "/images/gallery/client-doing-hair-cut-barber-shop-salon.jpg",
   },
   {
     id: "srv-2",
     title: "Balayage & Color",
     price: "From $150",
     desc: "Multi-dimensional color for a natural, sun-kissed look.",
-    img: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?q=80&w=1000&auto=format&fit=crop",
+    img: "/images/gallery/female-hairstylist-drying-curly-girl-s-hair-using-big-plastic-brush.jpg",
   },
   {
     id: "srv-3",
     title: "Spa & Facial",
     price: "From $120",
     desc: "Rejuvenating treatments using organic, premium products.",
-    img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1000&auto=format&fit=crop",
+    img: "/images/gallery/cosmetologist-applying-mask-face-client-beauty-salon.jpg",
   },
   {
     id: "srv-4",
     title: "Bridal Styling",
     price: "Custom",
     desc: "Flawless hair and makeup for your most important day.",
-    img: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop",
+    img: "/images/gallery/mostafa_meraji-barber-shop-7021798_1920.jpg",
   },
 ];
 
 const TEAM_MEMBERS = [
   {
     name: "Elena Rostova",
-    role: "Creative Director",
-    img: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=1000&auto=format&fit=crop",
+    role: "Creative Director & Hair Architect",
+    specialty: "Parisian Runway Architecture",
+    img: "/images/staff/io-images-person-1824147.svg",
   },
   {
     name: "Julian Vance",
-    role: "Master Colorist",
-    img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop",
+    role: "Master Colorist & Balayage Artisan",
+    specialty: "Milan Dimensional Balayage",
+    img: "/images/staff/io-images-person-1824147.svg",
   },
   {
     name: "Sophia Chen",
-    role: "Senior Stylist",
-    img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop",
+    role: "Senior Holistic Aesthetician",
+    specialty: "Tokyo Lymphatic Facial Sculpting",
+    img: "/images/staff/io-images-person-1824147.svg",
+  },
+  {
+    name: "Camille Laurent",
+    role: "Lead Bridal & Couture Stylist",
+    specialty: "Haute Couture Bridal Design",
+    img: "/images/staff/io-images-person-1824147.svg",
+  },
+];
+
+const GALLERY_ITEMS = [
+  {
+    title: "Sanctuary Grand Atelier",
+    category: "Ambiance",
+    desc: "Private consultation suites crafted in natural Italian stone and ambient aroma.",
+    img: "/images/gallery/mostafa_meraji-salon-6964527_1920.jpg",
+  },
+  {
+    title: "Editorial Haircut & Architecture",
+    category: "Hair Artistry",
+    desc: "Bespoke dry and wet precision sectioning tailored to individual face shape.",
+    img: "/images/gallery/client-doing-hair-cut-barber-shop-salon.jpg",
+  },
+  {
+    title: "Couture Styling & Blowdry",
+    category: "Styling",
+    desc: "Volumizing velvet finish with cold-pressed organic botanical oils.",
+    img: "/images/gallery/female-hairstylist-drying-curly-girl-s-hair-using-big-plastic-brush.jpg",
+  },
+  {
+    title: "Cellular Rejuvenation Ritual",
+    category: "Spa & Facial",
+    desc: "Deep peptide infusion and lymphatic microcurrent sculpting.",
+    img: "/images/gallery/cosmetologist-applying-mask-face-client-beauty-salon.jpg",
+  },
+  {
+    title: "Aura Private VIP Suite",
+    category: "Ambiance",
+    desc: "Intimate private quarters with dedicated barista and concierge service.",
+    img: "/images/gallery/sunriseforever-beauty-salon-4043096_1920.jpg",
+  },
+  {
+    title: "Barber & Grooming Suite",
+    category: "Grooming",
+    desc: "Executive men's grooming and tailored beard sculpting.",
+    img: "/images/gallery/mostafa_meraji-barber-shop-7021798_1920.jpg",
   },
 ];
 
@@ -67,6 +115,95 @@ const AVAILABILITY = [
   { day: "Tuesday - Friday", hours: "9:00 AM - 8:00 PM" },
   { day: "Saturday", hours: "9:00 AM - 6:00 PM" },
   { day: "Sunday", hours: "10:00 AM - 4:00 PM" },
+];
+
+const PRICING_CATEGORIES = [
+  {
+    category: "Haute Coiffure & Styling",
+    items: [
+      {
+        name: "Signature Haircut & Consultation",
+        price: "$85",
+        duration: "60 mins",
+        desc: "Precision bespoke cut tailored to bone structure, texture and personal aesthetic.",
+      },
+      {
+        name: "Editorial Blowdry & Finishing",
+        price: "$65",
+        duration: "45 mins",
+        desc: "Volumizing or glass-finish blowout using botanical thermal protectants.",
+      },
+      {
+        name: "K-Gloss & Molecular Repair Ritual",
+        price: "$140",
+        duration: "90 mins",
+        desc: "Intense cellular keratin and peptide infusion for supreme luster and strength.",
+      },
+    ],
+  },
+  {
+    category: "Artisan Color & Balayage",
+    items: [
+      {
+        name: "Bespoke Balayage & French Gloss",
+        price: "$150",
+        duration: "180 mins",
+        desc: "Hand-painted multi-dimensional illumination with customized tone gloss.",
+      },
+      {
+        name: "Full Scalp Lightening & Tone",
+        price: "$175",
+        duration: "150 mins",
+        desc: "Pure platinum or champagne blonde transformation with bond protector.",
+      },
+      {
+        name: "Root Shadow & Chromatic Melt",
+        price: "$95",
+        duration: "75 mins",
+        desc: "Seamless regrowth blending and chromatic balance.",
+      },
+    ],
+  },
+  {
+    category: "Cellular Skin & Spa Rituals",
+    items: [
+      {
+        name: "Caviar & 24K Gold Rejuvenation Facial",
+        price: "$160",
+        duration: "75 mins",
+        desc: "Deep cellular renewal using freeze-dried marine peptides and microcurrent.",
+      },
+      {
+        name: "Botanical Lymphatic Glow Treatment",
+        price: "$120",
+        duration: "60 mins",
+        desc: "Organic cold-pressed oils and jade sculpting for contour and radiance.",
+      },
+      {
+        name: "Aromatic Sanctuary Body Polish & Massage",
+        price: "$145",
+        duration: "90 mins",
+        desc: "Volcanic mineral scrub followed by warm basalt stone therapy.",
+      },
+    ],
+  },
+  {
+    category: "Bridal & Haute Couture",
+    items: [
+      {
+        name: "The Grand Bridal Heritage Package",
+        price: "Custom",
+        duration: "Half / Full Day",
+        desc: "Complete bridal hair architecture, couture makeup, skin prep & dressing ritual.",
+      },
+      {
+        name: "Pre-Wedding Radiant Glow Intensive",
+        price: "$280",
+        duration: "3.5 hrs",
+        desc: "Multi-stage facial, hair glossing, and relaxing wellness therapy.",
+      },
+    ],
+  },
 ];
 
 // ==========================================
@@ -323,18 +460,23 @@ const Navigation = ({ currentRoute, setRoute }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 3 Primary Nav Links: Home, About Us, Services
+  // 3 Primary Nav Links: Home, About Us, Services (Header stays clean)
   const navLinks = [
     { name: "Home", id: "home" },
     { name: "About Us", id: "about" },
     { name: "Services", id: "services" },
   ];
 
+  // Menu Drawer links (Includes Location, Prices, Gallery, etc.)
   const drawerLinks = [
     { name: "Home", id: "home" },
     { name: "About Us", id: "about" },
-    { name: "Services", id: "services" },
-    { name: "The Team", id: "team" },
+    { name: "Services & Curations", id: "services" },
+    { name: "Pricing & Treatments", id: "prices" },
+    { name: "The Team & Artisans", id: "team" },
+    { name: "Sanctuary Gallery", id: "gallery" },
+    { name: "Location & Hours", id: "location" },
+    { name: "Contact & Concierge", id: "contact" },
   ];
 
   const handleNavigate = (id) => {
@@ -491,13 +633,6 @@ const Navigation = ({ currentRoute, setRoute }) => {
                   >
                     Customer Account
                   </Link>
-                  <Link
-                    href="/admin"
-                    onClick={() => setIsOpen(false)}
-                    className="text-xs font-sans tracking-widest uppercase text-brand-cream/60 hover:text-brand-gold transition-colors py-2 px-4 border border-white/10"
-                  >
-                    Admin Portal
-                  </Link>
                 </div>
 
                 {/* Mobile Book Now Link in Menu */}
@@ -590,7 +725,7 @@ const HomePage = ({ setRoute }) => {
         <FadeIn>
           <div className="w-full h-[60vh] md:h-[80vh] relative overflow-hidden group">
             <img
-              src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2670&auto=format&fit=crop"
+              src="/images/gallery/mostafa_meraji-salon-6964527_1920.jpg"
               className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
               alt="Salon Experience"
             />
@@ -625,7 +760,7 @@ const AboutPage = ({ setRoute }) => {
           <FadeIn delay={0.2}>
             <div className="aspect-[3/4] overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1000&auto=format&fit=crop"
+                src="/images/background/client-doing-hair-cut-barber-shop-salon.jpg"
                 className="w-full h-full object-cover"
                 alt="Stylist at work"
               />
@@ -771,37 +906,171 @@ const TeamPage = ({ onBook }) => {
         </FadeIn>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {TEAM_MEMBERS.map((member, idx) => (
-          <FadeIn key={idx} delay={0.2 * idx}>
+          <FadeIn key={idx} delay={0.15 * idx}>
             <div
-              className="group cursor-pointer"
+              className="group cursor-pointer bg-brand-dark/50 border border-white/5 hover:border-brand-gold/40 transition-all duration-500 p-4 flex flex-col justify-between h-full"
               onClick={onBook}
             >
-              <div className="w-full aspect-[3/4] overflow-hidden mb-6 bg-brand-dark relative">
-                <img
-                  src={member.img}
-                  alt={member.name}
-                  className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                  <span className="text-xs uppercase tracking-widest text-brand-gold">
+              <div className="w-full aspect-[3/4] overflow-hidden mb-6 bg-brand-dark relative flex items-center justify-center">
+                {member.img.endsWith(".svg") ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-brand-dark via-brand-black/90 to-brand-dark">
+                    <div className="w-20 h-20 rounded-full border border-brand-gold/40 bg-brand-black flex items-center justify-center mb-3 group-hover:scale-110 group-hover:border-brand-gold transition-all duration-500 shadow-xl">
+                      <svg
+                        className="w-10 h-10 text-brand-gold/80"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-brand-gold/80">
+                      RuuAURA Artisan
+                    </span>
+                  </div>
+                ) : (
+                  <img
+                    src={member.img}
+                    alt={member.name}
+                    className="w-full h-full object-cover grayscale opacity-85 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                  <span className="text-[11px] uppercase tracking-widest text-brand-gold">
                     Book with {member.name.split(" ")[0]} →
                   </span>
                 </div>
               </div>
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-serif text-brand-cream mb-1">
+
+              <div>
+                <h3 className="text-xl font-serif text-brand-cream group-hover:text-brand-gold transition-colors mb-1">
                   {member.name}
                 </h3>
-                <p className="text-xs font-sans tracking-[0.15em] uppercase text-brand-gold">
+                <p className="text-[11px] font-sans tracking-[0.15em] uppercase text-brand-gold font-medium mb-1">
                   {member.role}
+                </p>
+                <p className="text-xs font-sans text-brand-cream/60 font-light">
+                  {member.specialty}
                 </p>
               </div>
             </div>
           </FadeIn>
         ))}
       </div>
+    </motion.div>
+  );
+};
+
+// ==========================================
+// GALLERY PAGE VIEW
+// ==========================================
+const GalleryPage = ({ setRoute }) => {
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const categories = ["all", "Ambiance", "Hair Artistry", "Styling", "Spa & Facial", "Bridal"];
+
+  const filteredGallery =
+    selectedCategory === "all"
+      ? GALLERY_ITEMS
+      : GALLERY_ITEMS.filter((item) =>
+          selectedCategory === "Ambiance"
+            ? item.category.includes("Ambiance")
+            : item.category.toLowerCase().includes(selectedCategory.toLowerCase())
+        );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+      className="pt-32 pb-24 md:pt-48 md:pb-40 px-6 md:px-16 container mx-auto min-h-screen"
+    >
+      <div className="max-w-3xl mb-12 md:mb-16">
+        <RevealText>
+          <h1 className="text-5xl md:text-8xl font-serif mb-6">
+            Sanctuary <span className="italic text-brand-gold">Gallery.</span>
+          </h1>
+        </RevealText>
+        <FadeIn delay={0.3}>
+          <p className="text-brand-cream/70 font-sans font-light text-lg">
+            A visual journey through the haute coiffure, serene wellness suites, and radiant beauty artistry of RuuAURA Colombo 07.
+          </p>
+        </FadeIn>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="flex flex-wrap gap-3 mb-12 pb-6 border-b border-white/10">
+        {categories.map((cat, idx) => (
+          <button
+            key={idx}
+            onClick={() => setSelectedCategory(cat)}
+            className={`text-xs font-sans tracking-widest uppercase py-2 px-5 transition-all ${
+              selectedCategory === cat
+                ? "bg-brand-gold text-brand-black font-semibold"
+                : "border border-white/20 text-brand-cream/70 hover:border-brand-gold/60"
+            }`}
+          >
+            {cat === "all" ? "All Visuals" : cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Gallery Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredGallery.map((item, idx) => (
+          <FadeIn key={idx} delay={0.1 * idx}>
+            <div className="group cursor-pointer bg-brand-dark border border-white/5 hover:border-brand-gold/40 transition-all duration-500 overflow-hidden flex flex-col justify-between">
+              <div className="w-full h-72 md:h-80 overflow-hidden relative">
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-85 group-hover:opacity-100"
+                />
+                <div className="absolute top-4 left-4 bg-brand-black/90 px-3 py-1 text-[10px] uppercase tracking-widest text-brand-gold font-sans border border-brand-gold/30 backdrop-blur-sm">
+                  {item.category}
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-serif text-brand-cream group-hover:text-brand-gold transition-colors mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-xs font-sans text-brand-cream/60 font-light leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
+
+      {/* Booking CTA Banner */}
+      <FadeIn delay={0.4} className="mt-20 p-8 md:p-12 bg-brand-dark border border-brand-gold/30 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div>
+          <h4 className="text-2xl font-serif text-brand-cream mb-2">
+            Experience the Sanctuary in Person
+          </h4>
+          <p className="text-sm font-sans text-brand-cream/70 font-light max-w-xl">
+            Book your private consultation or beauty ritual in our Colombo 07 atelier today.
+          </p>
+        </div>
+        <button
+          onClick={() => {
+            setRoute("booking");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="bg-brand-gold text-brand-black px-8 py-3.5 text-xs font-sans uppercase tracking-widest font-semibold hover:bg-white transition-colors whitespace-nowrap"
+        >
+          Reserve Your Visit
+        </button>
+      </FadeIn>
     </motion.div>
   );
 };
@@ -903,14 +1172,14 @@ const BookingPage = ({ preSelectedService }) => {
             <p className="text-brand-cream/90 text-base font-light mb-6">
               +94 77 123 4567
               <br />
-              info@aurabeauty.lk
+              info@ruuaura.lk
             </p>
             {/* Simulated Map Box */}
             <div className="w-full h-48 bg-brand-dark overflow-hidden relative group">
               <img
-                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1000&auto=format&fit=crop"
+                src="/images/gallery/sunriseforever-beauty-salon-4043096_1920.jpg"
                 alt="Map View"
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-500"
+                className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500"
               />
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="bg-brand-black/80 px-4 py-2 text-xs uppercase tracking-widest text-brand-gold font-sans backdrop-blur-sm border border-brand-gold/30">
@@ -1059,6 +1328,464 @@ const BookingPage = ({ preSelectedService }) => {
 };
 
 // ==========================================
+// PRICING & TREATMENTS PAGE VIEW
+// ==========================================
+const PricesPage = ({ onSelectService, setRoute }) => {
+  const [activeCategory, setActiveCategory] = useState("all");
+
+  const filteredCategories =
+    activeCategory === "all"
+      ? PRICING_CATEGORIES
+      : PRICING_CATEGORIES.filter((c) => c.category === activeCategory);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+      className="pt-32 pb-24 md:pt-48 md:pb-40 px-6 md:px-16 container mx-auto min-h-screen"
+    >
+      <div className="max-w-3xl mb-12 md:mb-16">
+        <RevealText>
+          <h1 className="text-5xl md:text-8xl font-serif mb-6">
+            Pricing & <span className="italic text-brand-gold">Menu.</span>
+          </h1>
+        </RevealText>
+        <FadeIn delay={0.3}>
+          <p className="text-brand-cream/70 font-sans font-light text-lg">
+            A comprehensive overview of our signature rituals, hair architecture,
+            and cellular therapies. Select any treatment to reserve your time.
+          </p>
+        </FadeIn>
+      </div>
+
+      {/* Category filter pills */}
+      <div className="flex flex-wrap gap-3 mb-16 pb-6 border-b border-white/10">
+        <button
+          onClick={() => setActiveCategory("all")}
+          className={`text-xs font-sans tracking-widest uppercase py-2 px-5 transition-all ${
+            activeCategory === "all"
+              ? "bg-brand-gold text-brand-black font-semibold"
+              : "border border-white/20 text-brand-cream/70 hover:border-brand-gold/60"
+          }`}
+        >
+          All Offerings
+        </button>
+        {PRICING_CATEGORIES.map((cat, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveCategory(cat.category)}
+            className={`text-xs font-sans tracking-widest uppercase py-2 px-5 transition-all ${
+              activeCategory === cat.category
+                ? "bg-brand-gold text-brand-black font-semibold"
+                : "border border-white/20 text-brand-cream/70 hover:border-brand-gold/60"
+            }`}
+          >
+            {cat.category}
+          </button>
+        ))}
+      </div>
+
+      {/* Pricing list */}
+      <div className="flex flex-col gap-16">
+        {filteredCategories.map((catGroup, cIdx) => (
+          <div key={cIdx} className="flex flex-col gap-8">
+            <h3 className="text-2xl md:text-3xl font-serif text-brand-gold border-b border-brand-gold/30 pb-3">
+              {catGroup.category}
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {catGroup.items.map((item, iIdx) => (
+                <FadeIn key={iIdx} delay={0.1 * iIdx}>
+                  <div className="p-6 md:p-8 bg-brand-dark/80 border border-white/5 hover:border-brand-gold/40 transition-colors flex flex-col justify-between group h-full">
+                    <div>
+                      <div className="flex justify-between items-start gap-4 mb-3">
+                        <h4 className="text-xl font-serif text-brand-cream group-hover:text-brand-gold transition-colors">
+                          {item.name}
+                        </h4>
+                        <div className="text-right whitespace-nowrap">
+                          <span className="text-brand-gold font-sans font-medium text-lg">
+                            {item.price}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="inline-block text-[10px] font-sans uppercase tracking-widest text-brand-muted mb-3 bg-white/5 px-2.5 py-1">
+                        ⏱ {item.duration}
+                      </span>
+                      <p className="text-sm font-sans text-brand-cream/60 font-light leading-relaxed mb-6">
+                        {item.desc}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => onSelectService({ title: item.name })}
+                      className="inline-flex items-center justify-between text-xs font-sans uppercase tracking-[0.15em] text-brand-gold group-hover:text-white pt-4 border-t border-white/10 transition-colors w-full"
+                    >
+                      <span>Reserve Treatment</span>
+                      <ArrowRightIcon />
+                    </button>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Consultation Banner */}
+      <FadeIn delay={0.4} className="mt-20 p-8 md:p-12 bg-brand-dark border border-brand-gold/30 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div>
+          <h4 className="text-2xl font-serif text-brand-cream mb-2">
+            Looking for a Bespoke Package?
+          </h4>
+          <p className="text-sm font-sans text-brand-cream/70 font-light max-w-xl">
+            Our creative directors provide tailored consultations for bridal ateliers, editorial shoots, and complete aesthetic restyling.
+          </p>
+        </div>
+        <button
+          onClick={() => {
+            setRoute("contact");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="bg-brand-gold text-brand-black px-8 py-3.5 text-xs font-sans uppercase tracking-widest font-semibold hover:bg-white transition-colors whitespace-nowrap"
+        >
+          Consult Concierge
+        </button>
+      </FadeIn>
+    </motion.div>
+  );
+};
+
+// ==========================================
+// LOCATION & HOURS PAGE VIEW
+// ==========================================
+const LocationPage = ({ setRoute }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+      className="pt-32 pb-24 md:pt-48 md:pb-40 px-6 md:px-16 container mx-auto min-h-screen"
+    >
+      <div className="max-w-3xl mb-16 md:mb-20">
+        <RevealText>
+          <h1 className="text-5xl md:text-8xl font-serif mb-6">
+            Our <span className="italic text-brand-gold">Sanctuary.</span>
+          </h1>
+        </RevealText>
+        <FadeIn delay={0.3}>
+          <p className="text-brand-cream/70 font-sans font-light text-lg">
+            Nestled in the heart of Dehiwala, RuuAURA offers a serene private retreat away from the city&apos;s tempo.
+          </p>
+        </FadeIn>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+        {/* Left column: Address & Hours */}
+        <FadeIn delay={0.2} className="flex flex-col gap-10">
+          <div>
+            <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-brand-gold mb-3">
+              Sanctuary Address
+            </h3>
+            <p className="text-2xl font-serif text-brand-cream mb-2">
+              142 Galle Road, Dehiwala
+            </p>
+            <p className="text-sm font-sans text-brand-cream/60 font-light">
+              Western Province, Sri Lanka • Dehiwala Sanctuary
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-brand-gold mb-4 flex items-center gap-2">
+              <CalendarIcon /> Operating Hours
+            </h3>
+            <div className="flex flex-col gap-3.5 bg-brand-dark p-6 border border-white/5 text-sm font-sans font-light">
+              {AVAILABILITY.map((schedule, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between items-center text-brand-cream/90 pb-2.5 border-b border-white/5 last:border-none last:pb-0"
+                >
+                  <span className="text-brand-cream/80">{schedule.day}</span>
+                  <span
+                    className={
+                      schedule.hours.includes("Closed")
+                        ? "text-brand-muted"
+                        : "text-brand-gold font-medium"
+                    }
+                  >
+                    {schedule.hours}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-brand-gold mb-3">
+              Amenities & Valet
+            </h3>
+            <ul className="text-sm font-sans text-brand-cream/70 font-light flex flex-col gap-2">
+              <li>✦ Complimentary Private Valet Parking</li>
+              <li>✦ Individual VIP Styling Suites</li>
+              <li>✦ Organic Refreshment & Tea Atelier</li>
+              <li>✦ High-Speed Fiber WiFi & Charging Docks</li>
+            </ul>
+          </div>
+
+          <div className="pt-4 flex gap-4">
+            <button
+              onClick={() => {
+                setRoute("booking");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="bg-brand-gold text-brand-black px-8 py-3.5 text-xs font-sans uppercase tracking-[0.2em] font-semibold hover:bg-white transition-colors"
+            >
+              Reserve a Session
+            </button>
+            <button
+              onClick={() => {
+                setRoute("contact");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="border border-white/20 px-8 py-3.5 text-xs font-sans uppercase tracking-[0.2em] font-semibold text-brand-cream hover:border-brand-gold hover:text-brand-gold transition-colors"
+            >
+              Contact Desk
+            </button>
+          </div>
+        </FadeIn>
+
+        {/* Right column: Interactive Map Simulation */}
+        <FadeIn delay={0.4} className="flex flex-col gap-6">
+          <div className="w-full h-[450px] bg-brand-dark border border-white/10 relative overflow-hidden group">
+            <img
+              src="/images/gallery/sunriseforever-beauty-salon-4043096_1920.jpg"
+              alt="Dehiwala Sanctuary Location Map"
+              className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent opacity-80" />
+            
+            <div className="absolute top-6 left-6 bg-brand-black/90 p-4 border border-brand-gold/30 backdrop-blur-md max-w-xs">
+              <p className="text-xs font-serif text-brand-gold mb-1">RuuAURA Sanctuary</p>
+              <p className="text-[11px] font-sans text-brand-cream/80 font-light">142 Galle Road, Dehiwala</p>
+              <p className="text-[10px] font-sans text-brand-muted mt-2">Private entrance with designated concierge valet</p>
+            </div>
+
+            <div className="absolute bottom-6 right-6">
+              <a
+                href="https://maps.google.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 bg-brand-gold text-brand-black px-5 py-2.5 text-xs uppercase tracking-widest font-semibold hover:bg-white transition-colors"
+              >
+                Open in Google Maps →
+              </a>
+            </div>
+          </div>
+        </FadeIn>
+      </div>
+    </motion.div>
+  );
+};
+
+// ==========================================
+// CONTACT & CONCIERGE PAGE VIEW
+// ==========================================
+const ContactPage = ({ setRoute }) => {
+  const [formSent, setFormSent] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormSent(true);
+    setTimeout(() => {
+      setFormSent(false);
+      e.target.reset();
+    }, 4000);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+      className="pt-32 pb-24 md:pt-48 md:pb-40 px-6 md:px-16 container mx-auto min-h-screen"
+    >
+      <div className="max-w-3xl mb-16 md:mb-20">
+        <RevealText>
+          <h1 className="text-5xl md:text-8xl font-serif mb-6">
+            Connect with <span className="italic text-brand-gold">Concierge.</span>
+          </h1>
+        </RevealText>
+        <FadeIn delay={0.3}>
+          <p className="text-brand-cream/70 font-sans font-light text-lg">
+            Have questions regarding treatments, private events, or bridal bookings? Our dedicated team is at your service.
+          </p>
+        </FadeIn>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+        {/* Left: Contact Info */}
+        <FadeIn delay={0.2} className="flex flex-col gap-10">
+          <div>
+            <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-brand-gold mb-3">
+              Direct Inquiries
+            </h3>
+            <p className="text-2xl font-serif text-brand-cream mb-1">
+              +94 77 123 4567
+            </p>
+            <p className="text-sm font-sans text-brand-cream/70 font-light mb-6">
+              info@ruuaura.lk • concierge@ruuaura.lk
+            </p>
+
+            <a
+              href="https://wa.me/94771234567"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-3 bg-brand-dark border border-brand-gold/40 text-brand-gold px-6 py-3 text-xs uppercase tracking-widest hover:bg-brand-gold hover:text-brand-black transition-colors"
+            >
+              <span>Chat on WhatsApp</span>
+              <ArrowRightIcon />
+            </a>
+          </div>
+
+          <div className="border-t border-white/10 pt-8">
+            <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-brand-gold mb-2">
+              Sanctuary Concierge Desk
+            </h3>
+            <p className="text-sm font-sans text-brand-cream/80 font-light mb-2">
+              142 Galle Road, Dehiwala, Sri Lanka
+            </p>
+            <p className="text-xs font-sans text-brand-muted">
+              Tuesday – Sunday: 9:00 AM – 8:00 PM
+            </p>
+          </div>
+
+          <div className="border-t border-white/10 pt-8">
+            <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-brand-gold mb-3">
+              Looking for Immediate Appointment?
+            </h3>
+            <button
+              onClick={() => {
+                setRoute("booking");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="bg-brand-gold text-brand-black px-6 py-3 text-xs uppercase tracking-widest font-semibold hover:bg-white transition-colors"
+            >
+              Book Online Now
+            </button>
+          </div>
+        </FadeIn>
+
+        {/* Right: Message Form */}
+        <FadeIn delay={0.4}>
+          <div className="bg-brand-dark p-8 md:p-12 border border-white/5 relative">
+            <AnimatePresence>
+              {formSent && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 bg-brand-dark z-20 flex flex-col items-center justify-center text-center p-8"
+                >
+                  <div className="w-16 h-16 rounded-full border border-brand-gold flex items-center justify-center text-brand-gold mb-6 text-2xl">
+                    ✓
+                  </div>
+                  <h3 className="text-2xl font-serif text-brand-cream mb-2">
+                    Message Dispatched
+                  </h3>
+                  <p className="text-brand-cream/70 font-sans font-light">
+                    Our concierge has received your note and will reply within 1 business day.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <h3 className="text-2xl font-serif text-brand-cream mb-6">
+              Send an Inquiry
+            </h3>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                  Your Name
+                </label>
+                <input
+                  required
+                  type="text"
+                  placeholder="Elena Vance"
+                  className="w-full bg-transparent border-b border-white/20 py-2 text-brand-cream placeholder-brand-muted/30 focus:outline-none focus:border-brand-gold transition-colors font-sans text-base"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    required
+                    type="email"
+                    placeholder="elena@example.com"
+                    className="w-full bg-transparent border-b border-white/20 py-2 text-brand-cream placeholder-brand-muted/30 focus:outline-none focus:border-brand-gold transition-colors font-sans text-base"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                    Phone (Optional)
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+94 7X XXX XXXX"
+                    className="w-full bg-transparent border-b border-white/20 py-2 text-brand-cream placeholder-brand-muted/30 focus:outline-none focus:border-brand-gold transition-colors font-sans text-base"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                  Inquiry Topic
+                </label>
+                <select
+                  required
+                  className="w-full bg-brand-dark border-b border-white/20 py-2 text-brand-cream focus:outline-none focus:border-brand-gold transition-colors font-sans text-base appearance-none rounded-none cursor-pointer"
+                >
+                  <option value="">Select topic...</option>
+                  <option value="treatments">Treatment Consultation</option>
+                  <option value="bridal">Bridal & Couture Package</option>
+                  <option value="events">Private Sanctuary Event</option>
+                  <option value="other">General Inquiries</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                  Message
+                </label>
+                <textarea
+                  required
+                  rows="3"
+                  placeholder="How may our concierge assist you?"
+                  className="w-full bg-transparent border-b border-white/20 py-2 text-brand-cream placeholder-brand-muted/30 focus:outline-none focus:border-brand-gold transition-colors font-sans text-base resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="mt-2 bg-brand-gold text-brand-black px-8 py-4 text-xs tracking-[0.2em] uppercase font-semibold hover:bg-white transition-colors duration-300 w-full md:w-auto self-start cursor-pointer"
+              >
+                Send Message
+              </button>
+            </form>
+          </div>
+        </FadeIn>
+      </div>
+    </motion.div>
+  );
+};
+
+// ==========================================
 // FOOTER
 // ==========================================
 const Footer = ({ setRoute }) => {
@@ -1113,24 +1840,45 @@ const Footer = ({ setRoute }) => {
           </button>
           <button
             onClick={() => {
-              setRoute("team");
+              setRoute("prices");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
           >
-            The Team
+            Pricing
+          </button>
+          <button
+            onClick={() => {
+              setRoute("gallery");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            Gallery
+          </button>
+          <button
+            onClick={() => {
+              setRoute("location");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            Location
+          </button>
+          <button
+            onClick={() => {
+              setRoute("contact");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            Contact
           </button>
           <Link
             href="/login"
             className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
           >
             Sign In
-          </Link>
-          <Link
-            href="/account"
-            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
-          >
-            Account
           </Link>
           <button
             onClick={() => {
@@ -1145,9 +1893,22 @@ const Footer = ({ setRoute }) => {
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center text-xs font-sans tracking-widest text-brand-muted uppercase gap-4">
-        <p>© 2026 RuuAURA. All rights reserved.</p>
+        <div className="flex flex-col gap-1 text-center md:text-left">
+          <p>© 2026 RuuAURA. All rights reserved.</p>
+          <p className="normal-case tracking-normal text-[11px] text-brand-cream/60">
+            Designed &amp; Developed by{" "}
+            <a
+              href="https://shamikakkss.me/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-gold hover:underline hover:text-white transition-colors"
+            >
+              Sachintha
+            </a>
+          </p>
+        </div>
         <div className="flex items-center gap-8">
-          <span className="text-brand-cream/60">142 Ward Place, Colombo 07</span>
+          <span className="text-brand-cream/60">142 Galle Road, Dehiwala</span>
           <div className="flex gap-6">
             <a
               href="https://instagram.com"
@@ -1198,8 +1959,22 @@ export default function AllInOneSanctuary() {
             onSelectService={handleSelectServiceAndBook}
           />
         );
+      case "prices":
+        return (
+          <PricesPage
+            key="prices"
+            onSelectService={handleSelectServiceAndBook}
+            setRoute={setCurrentRoute}
+          />
+        );
       case "team":
         return <TeamPage key="team" onBook={() => setCurrentRoute("booking")} />;
+      case "gallery":
+        return <GalleryPage key="gallery" setRoute={setCurrentRoute} />;
+      case "location":
+        return <LocationPage key="location" setRoute={setCurrentRoute} />;
+      case "contact":
+        return <ContactPage key="contact" setRoute={setCurrentRoute} />;
       case "booking":
         return (
           <BookingPage

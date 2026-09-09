@@ -18,7 +18,7 @@ export default function AboutTeaserSection() {
               <em className="text-brand-gold not-italic">Sanctuary</em>
             </h2>
             <p className="text-brand-muted leading-relaxed mb-6">
-              Born from a passion for transformative beauty, RuuAURA is not merely a salon — it is a private sanctuary where the world&apos;s finest techniques, botanicals, and artisanship converge in intimate Colombo 07.
+              Born from a passion for transformative beauty, RuuAURA is not merely a salon — it is a private sanctuary where the world&apos;s finest techniques, botanicals, and artisanship converge in intimate Dehiwala.
             </p>
             <p className="text-brand-muted leading-relaxed mb-10">
               Each experience is a bespoke ritual, crafted by master artisans trained in the ateliers of Paris, Milan, Tokyo and beyond. We believe beauty is personal, profound, and deeply intentional.

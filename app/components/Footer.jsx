@@ -64,7 +64,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-brand-muted text-sm leading-relaxed mb-6">
-              A sanctuary of haute coiffure and aesthetic radiance in the heart of Colombo 07. Where artistry meets luxury.
+              A sanctuary of haute coiffure and aesthetic radiance in the heart of Dehiwala. Where artistry meets luxury.
             </p>
             <div className="flex gap-4">
               <a
@@ -143,7 +143,7 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin size={14} className="text-brand-gold shrink-0 mt-0.5" />
                 <span className="text-sm text-brand-muted">
-                  42 Rosmead Place, Colombo 07, Sri Lanka
+                  142 Galle Road, Dehiwala, Sri Lanka
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -172,9 +172,22 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-brand-border">
         <div className="container-luxury py-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-brand-muted">
-            © {year} RuuAURA Beauty Sanctuary. All rights reserved.
-          </p>
+          <div className="flex flex-col gap-1 text-center md:text-left">
+            <p className="text-xs text-brand-muted">
+              © {year} RuuAURA. All rights reserved.
+            </p>
+            <p className="text-[11px] text-brand-muted/70">
+              Designed &amp; Developed by{" "}
+              <a
+                href="https://shamikakkss.me/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-gold hover:underline hover:text-brand-cream transition-colors"
+              >
+                Sachintha
+              </a>
+            </p>
+          </div>
           <div className="flex gap-6">
             <Link href="/privacy" className="text-xs text-brand-muted hover:text-brand-cream transition-colors">
               Privacy Policy

@@ -1,5 +1,6 @@
 import { Playfair_Display, Plus_Jakarta_Sans, Cinzel } from "next/font/google";
 import "./globals.css";
+import WhatsAppWidget from "./components/WhatsAppWidget";
 
 const playfair = Playfair_Display({
   variable: "--font-serif",
@@ -23,14 +24,14 @@ const cinzel = Cinzel({
 });
 
 export const metadata = {
-  title: "RuuAURA — Sanctuary of Haute Coiffure & Aesthetic Radiance | Colombo 07",
+  title: "RuuAURA — Sanctuary of Haute Coiffure & Aesthetic Radiance | Dehiwala",
   description:
-    "RuuAURA is Colombo's premier luxury beauty sanctuary offering bespoke hair architecture, artisan color, cellular spa rituals, and editorial bridal couture. Book your private appointment.",
+    "RuuAURA is Dehiwala's premier luxury beauty sanctuary offering bespoke hair architecture, artisan color, cellular spa rituals, and editorial bridal couture. Book your private appointment.",
   keywords:
-    "luxury salon colombo, haute coiffure, balayage, spa, bridal hair makeup, colombo beauty studio",
+    "luxury salon dehiwala, haute coiffure, balayage, spa, bridal hair makeup, dehiwala beauty studio",
   openGraph: {
     title: "RuuAURA — Luxury Beauty Sanctuary",
-    description: "Bespoke hair architecture, spa rituals & bridal couture in Colombo 07.",
+    description: "Bespoke hair architecture, spa rituals & bridal couture in Dehiwala.",
     type: "website",
   },
 };
@@ -46,8 +47,9 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${playfair.variable} ${jakartaSans.variable} ${cinzel.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-brand-black text-brand-cream">
+      <body className="min-h-full flex flex-col bg-brand-black text-brand-cream relative">
         {children}
+        <WhatsAppWidget />
       </body>
     </html>
   );

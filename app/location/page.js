@@ -7,7 +7,7 @@ import { MapPin, Clock, Phone, Mail, Car } from "lucide-react";
 export const metadata = {
   title: "Location & Hours — RuuAURA Beauty Sanctuary",
   description:
-    "Visit RuuAURA at 42 Rosmead Place, Colombo 07, Sri Lanka. Find our hours, directions, and contact details.",
+    "Visit RuuAURA at 142 Galle Road, Dehiwala, Sri Lanka. Find our hours, directions, and contact details.",
 };
 
 export default function LocationPage() {
@@ -28,7 +28,7 @@ export default function LocationPage() {
               Visit the Sanctuary
             </h1>
             <p className="text-brand-muted max-w-lg mx-auto text-lg leading-relaxed">
-              Nestled in the heart of Colombo 07, the RuuAURA sanctuary awaits. We&apos;re accessible by private vehicle, rideshare, and public transport.
+              Nestled in the heart of Dehiwala, the RuuAURA sanctuary awaits. We&apos;re accessible by private vehicle, rideshare, and public transport.
             </p>
           </div>
         </section>
@@ -54,8 +54,8 @@ export default function LocationPage() {
                   icon: Car,
                   title: "By Car",
                   steps: [
-                    "Turn off Guildford Crescent onto Rosmead Place",
-                    "We are located at No. 42, on the left",
+                    "Located along Galle Road in Dehiwala",
+                    "We are located at No. 142, Galle Road",
                     "Complimentary valet parking available",
                   ],
                 },
@@ -63,9 +63,9 @@ export default function LocationPage() {
                   icon: MapPin,
                   title: "Landmarks",
                   steps: [
-                    "2 minutes from Colombo City Centre",
-                    "Adjacent to Rosmead Place Gardens",
-                    "Opposite the Ceylon Continental Hotel",
+                    "Near Dehiwala Junction",
+                    "Direct access from Marine Drive & Galle Road",
+                    "Private entrance with designated concierge valet",
                   ],
                 },
                 {

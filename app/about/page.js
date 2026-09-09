@@ -8,7 +8,7 @@ import BookingCTA from "@/app/components/BookingCTA";
 export const metadata = {
   title: "About RuuAURA — Our Story & Philosophy",
   description:
-    "Discover the story of RuuAURA Beauty Sanctuary — Colombo's premier luxury beauty destination. Learn about our philosophy, artisans, and commitment to transformative beauty.",
+    "Discover the story of RuuAURA Beauty Sanctuary — Dehiwala's premier luxury beauty destination. Learn about our philosophy, artisans, and commitment to transformative beauty.",
 };
 
 export default function AboutPage() {
@@ -154,7 +154,7 @@ export default function AboutPage() {
               <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-brand-border" />
               {[
                 { year: "2016", title: "The Vision", desc: "RuuAURA is founded with a single private studio and a radical commitment to bespoke luxury." },
-                { year: "2018", title: "Expansion", desc: "Full sanctuary opens in Colombo 07 with six treatment rooms and a curated retail space." },
+                { year: "2018", title: "Expansion", desc: "Full sanctuary opens in Dehiwala with six treatment rooms and a curated retail space." },
                 { year: "2020", title: "International Artisans", desc: "Three internationally acclaimed artisans join the team from Paris, Dubai and Tokyo." },
                 { year: "2022", title: "Bridal Division", desc: "Launch of the exclusive bridal and editorial department with Camille Laurent at its helm." },
                 { year: "2024", title: "Certified Organic", desc: "RuuAURA achieves full organic certification and introduces the Botanical Sanctuary spa menu." },

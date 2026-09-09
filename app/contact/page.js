@@ -54,7 +54,7 @@ export default function ContactPage() {
                       {
                         icon: MapPin,
                         label: "Address",
-                        content: "42 Rosmead Place, Colombo 07\nSri Lanka",
+                        content: "142 Galle Road, Dehiwala\nSri Lanka",
                       },
                       {
                         icon: Phone,
