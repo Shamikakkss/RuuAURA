@@ -14,6 +14,7 @@ export default function ProfilePage() {
   });
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleted, setDeleted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +26,12 @@ export default function ProfilePage() {
   };
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const handleDelete = () => {
+    if (window.confirm("Delete this demo account? This cannot be undone.")) {
+      setDeleted(true);
+    }
+  };
 
   return (
     <>
@@ -105,8 +112,8 @@ export default function ProfilePage() {
                       Permanently delete your account and all associated data. This action cannot be undone.
                     </p>
                   </div>
-                  <button className="btn-luxury border border-brand-error/40 text-brand-error px-6 py-3 rounded-sm hover:bg-brand-error/10 text-xs flex-shrink-0">
-                    Delete Account
+                  <button onClick={handleDelete} className="btn-luxury border border-brand-error/40 text-brand-error px-6 py-3 rounded-sm hover:bg-brand-error/10 text-xs flex-shrink-0">
+                    {deleted ? "Account Deletion Requested" : "Delete Account"}
                   </button>
                 </div>
               </div>

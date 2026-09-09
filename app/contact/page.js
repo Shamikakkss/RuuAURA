@@ -37,7 +37,7 @@ export default function ContactPage() {
               Contact the Sanctuary
             </h1>
             <p className="text-brand-muted max-w-lg mx-auto text-lg leading-relaxed">
-              We'd love to hear from you. Send us a message and a member of the RuuAURA team will be in touch within one business day.
+              We&apos;d love to hear from you. Send us a message and a member of the RuuAURA team will be in touch within one business day.
             </p>
           </div>
         </section>

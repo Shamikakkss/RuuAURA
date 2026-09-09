@@ -51,7 +51,7 @@ export default function Navbar() {
               style={{ fontFamily: "var(--font-cinzel)" }}
               className="text-2xl font-bold text-brand-cream tracking-widest group-hover:text-brand-gold transition-colors duration-300"
             >
-              RUUAURA
+              RuuAURA
             </span>
             <span
               style={{ fontFamily: "var(--font-cinzel)" }}
@@ -129,7 +129,7 @@ export default function Navbar() {
                 style={{ fontFamily: "var(--font-cinzel)" }}
                 className="text-lg font-bold text-brand-cream tracking-widest"
               >
-                RUUAURA
+                RuuAURA
               </span>
               <button
                 onClick={() => setMenuOpen(false)}

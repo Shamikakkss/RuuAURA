@@ -28,7 +28,7 @@ export default function LocationPage() {
               Visit the Sanctuary
             </h1>
             <p className="text-brand-muted max-w-lg mx-auto text-lg leading-relaxed">
-              Nestled in the heart of Colombo 07, the RuuAURA sanctuary awaits. We're accessible by private vehicle, rideshare, and public transport.
+              Nestled in the heart of Colombo 07, the RuuAURA sanctuary awaits. We&apos;re accessible by private vehicle, rideshare, and public transport.
             </p>
           </div>
         </section>

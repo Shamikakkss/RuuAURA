@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,6 +21,7 @@ import {
   SERVICE_CATEGORIES,
   TIME_SLOTS,
 } from "@/data/mockData";
+import { addStoredBooking, addStoredNotification } from "@/lib/demoStore";
 
 const STEPS = [
   { id: 1, label: "Service" },
@@ -37,9 +38,9 @@ function generateBookingId() {
 function BookingContent() {
   const params = useSearchParams();
   const [step, setStep] = useState(1);
-  const [booking, setBooking] = useState({
-    service: null,
-    artisan: null, // null = "Any Available"
+  const [booking, setBooking] = useState(() => ({
+    service: SERVICES.find((service) => service.id === params.get("service")) || null,
+    artisan: ARTISANS.find((artisan) => artisan.id === params.get("artisan")) || null,
     date: "",
     time: "",
     name: "",
@@ -47,25 +48,11 @@ function BookingContent() {
     phone: "",
     whatsapp: "",
     notes: "",
-  });
+  }));
   const [confirmed, setConfirmed] = useState(null);
   const [catFilter, setCatFilter] = useState("all");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
-
-  // Pre-select service from URL params
-  useEffect(() => {
-    const sid = params.get("service");
-    const aid = params.get("artisan");
-    if (sid) {
-      const found = SERVICES.find((s) => s.id === sid);
-      if (found) setBooking((b) => ({ ...b, service: found }));
-    }
-    if (aid) {
-      const found = ARTISANS.find((a) => a.id === aid);
-      if (found) setBooking((b) => ({ ...b, artisan: found }));
-    }
-  }, [params]);
 
   const goNext = () => setStep((s) => Math.min(s + 1, 5));
   const goPrev = () => setStep((s) => Math.max(s - 1, 1));
@@ -94,14 +81,44 @@ function BookingContent() {
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 1800));
     const ref = generateBookingId();
-    setConfirmed({ ...booking, ref, status: "Confirmed" });
+    const record = {
+      id: ref,
+      serviceTitle: booking.service.title,
+      price: booking.service.price,
+      duration: booking.service.duration,
+      artisanName: booking.artisan?.name || "Any Available Artisan",
+      date: booking.date,
+      time: booking.time,
+      clientName: booking.name,
+      clientEmail: booking.email,
+      clientPhone: booking.phone,
+      notes: booking.notes,
+      status: "Pending",
+      createdAt: new Date().toISOString().split("T")[0],
+    };
+    addStoredBooking(record);
+    addStoredNotification({
+      id: `notif-${ref}`,
+      type: "booking",
+      title: "Booking Request Received",
+      message: `Your ${booking.service.title} request for ${booking.date} at ${booking.time} is awaiting confirmation.`,
+      time: "Just now",
+      read: false,
+    });
+    setConfirmed({ ...booking, ref, status: "Pending" });
     setSubmitting(false);
   };
 
   // Get today's date in YYYY-MM-DD
-  const today = new Date().toISOString().split("T")[0];
-  // Max date: 60 days from now
-  const maxDate = new Date(Date.now() + 60 * 86400000).toISOString().split("T")[0];
+  const [dateRange] = useState(() => {
+    const now = new Date();
+    const today = now.toISOString().split("T")[0];
+    const maxDate = new Date(now.getTime() + 60 * 86400000)
+      .toISOString()
+      .split("T")[0];
+    return { today, maxDate };
+  });
+  const { today, maxDate } = dateRange;
 
   if (confirmed) {
     return <BookingSuccess booking={confirmed} />;
@@ -255,7 +272,7 @@ function ServiceStep({ booking, setBooking, catFilter, setCatFilter }) {
         Choose Your Service
       </h2>
       <p className="text-sm text-brand-muted mb-6">
-        Select the service you'd like to book.
+        Select the service you&apos;d like to book.
       </p>
 
       {/* Category Filter */}
@@ -350,7 +367,7 @@ function ArtisanStep({ booking, setBooking }) {
         Choose Your Artisan
       </h2>
       <p className="text-sm text-brand-muted mb-6">
-        Select a preferred artisan, or choose "Any Available" for the next available specialist.
+        Select a preferred artisan, or choose &quot;Any Available&quot; for the next available specialist.
       </p>
 
       {/* Any Available */}
@@ -373,7 +390,7 @@ function ArtisanStep({ booking, setBooking }) {
             Any Available Artisan
           </p>
           <p className="text-xs text-brand-muted mt-0.5">
-            We'll assign the most suitable available specialist for your service.
+            We&apos;ll assign the most suitable available specialist for your service.
           </p>
         </div>
         {booking.artisan === null && (
@@ -450,6 +467,12 @@ function DateTimeStep({ booking, setBooking, today, maxDate }) {
     ...TIME_SLOTS.afternoon.map((t) => ({ t, group: "Afternoon" })),
     ...TIME_SLOTS.evening.map((t) => ({ t, group: "Evening" })),
   ];
+  const unavailableSlots = booking.date
+    ? new Date(`${booking.date}T12:00:00`).getDay() === 1
+      ? allSlots.map(({ t }) => t)
+      : allSlots.filter((_, index) => (new Date(`${booking.date}T12:00:00`).getDate() + index) % 5 === 0).map(({ t }) => t)
+    : [];
+  const availableSlots = allSlots.filter(({ t }) => !unavailableSlots.includes(t));
 
   return (
     <div>
@@ -482,6 +505,9 @@ function DateTimeStep({ booking, setBooking, today, maxDate }) {
             onChange={(e) => setBooking((b) => ({ ...b, date: e.target.value, time: "" }))}
             className="input-luxury"
           />
+          <p className="text-[11px] text-brand-muted mt-2">
+            Appointments are available within the next 60 days. Mondays are reserved for private editorial work.
+          </p>
           {booking.date && (
             <p className="text-xs text-brand-gold mt-2 flex items-center gap-1.5">
               <Calendar size={11} />
@@ -507,6 +533,11 @@ function DateTimeStep({ booking, setBooking, today, maxDate }) {
             <p className="text-sm text-brand-muted py-4">Please select a date first</p>
           ) : (
             <div className="flex flex-col gap-4">
+              {availableSlots.length === 0 && (
+                <div className="border border-brand-gold/30 bg-brand-gold/5 p-4 text-sm text-brand-gold">
+                  No availability remains for this date. Please choose another date.
+                </div>
+              )}
               {["Morning", "Afternoon", "Evening"].map((group) => {
                 const slots = allSlots.filter((s) => s.group === group);
                 return (
@@ -521,9 +552,12 @@ function DateTimeStep({ booking, setBooking, today, maxDate }) {
                       {slots.map(({ t }) => (
                         <button
                           key={t}
+                          disabled={unavailableSlots.includes(t)}
                           onClick={() => setBooking((b) => ({ ...b, time: t }))}
                           className={`px-4 py-2 text-xs rounded-sm border transition-all duration-300 ${
-                            booking.time === t
+                            unavailableSlots.includes(t)
+                              ? "border-brand-border/40 text-brand-muted/40 line-through cursor-not-allowed"
+                              : booking.time === t
                               ? "bg-brand-gold text-brand-black border-brand-gold font-semibold"
                               : "border-brand-border text-brand-muted hover:border-brand-gold/40 hover:text-brand-cream"
                           }`}
@@ -728,7 +762,7 @@ function BookingSuccess({ booking }) {
             <CheckCircle size={36} className="text-brand-gold" />
           </div>
 
-          <p className="section-label mb-4">Booking Confirmed</p>
+          <p className="section-label mb-4">Booking Request Received</p>
           <h1
             style={{ fontFamily: "var(--font-serif)" }}
             className="text-4xl font-semibold text-brand-cream mb-4"

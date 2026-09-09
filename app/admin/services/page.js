@@ -20,6 +20,7 @@ export default function AdminServicesPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [newService, setNewService] = useState({
     title: "",
     category: "hair",
@@ -39,18 +40,20 @@ export default function AdminServicesPage() {
     return matchesCategory && matchesSearch;
   });
 
-  const handleAddService = (e) => {
+  const handleSaveService = (e) => {
     e.preventDefault();
     if (!newService.title || !newService.price) return;
     const created = {
       ...newService,
-      id: `srv-${Date.now()}`,
+      id: editingId || `srv-${Date.now()}`,
       rawPrice: parseInt(newService.price.replace(/[^0-9]/g, "")) || 100,
+      active: true,
       fallback:
         "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1000&auto=format&fit=crop",
     };
-    setServicesList((prev) => [created, ...prev]);
+    setServicesList((prev) => editingId ? prev.map((service) => service.id === editingId ? { ...service, ...created } : service) : [created, ...prev]);
     setIsModalOpen(false);
+    setEditingId(null);
     setNewService({
       title: "",
       category: "hair",
@@ -62,6 +65,16 @@ export default function AdminServicesPage() {
     });
   };
 
+  const handleEdit = (service) => {
+    setEditingId(service.id);
+    setNewService({ ...service, price: service.price || `$${service.rawPrice}` });
+    setIsModalOpen(true);
+  };
+
+  const handleToggleActive = (id) => {
+    setServicesList((prev) => prev.map((service) => service.id === id ? { ...service, active: service.active === false } : service));
+  };
+
   const handleDelete = (id) => {
     setServicesList((prev) => prev.filter((s) => s.id !== id));
   };
@@ -70,7 +83,7 @@ export default function AdminServicesPage() {
     <div className="min-h-screen bg-brand-darkest text-brand-cream flex">
       <AdminSidebar />
 
-      <main className="flex-1 p-6 md:p-10 overflow-x-hidden">
+      <main className="flex-1 p-6 pt-24 md:p-10 overflow-x-hidden">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-brand-border">
           <div>
@@ -170,6 +183,15 @@ export default function AdminServicesPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button
+                      onClick={() => handleToggleActive(srv.id)}
+                      className={`px-2 py-1 rounded border ${srv.active === false ? "border-brand-error/40 text-brand-error" : "border-brand-success/40 text-brand-success"}`}
+                    >
+                      {srv.active === false ? "Archived" : "Active"}
+                    </button>
+                    <button onClick={() => handleEdit(srv)} className="p-1.5 hover:text-brand-gold rounded transition-colors" title="Edit Service">
+                      <Edit2 size={14} />
+                    </button>
+                    <button
                       onClick={() => handleDelete(srv.id)}
                       className="p-1.5 hover:bg-red-950/50 hover:text-red-400 rounded transition-colors"
                       title="Delete Service"
@@ -198,10 +220,10 @@ export default function AdminServicesPage() {
                 style={{ fontFamily: "var(--font-cinzel)" }}
                 className="text-xl font-light text-brand-cream mb-6"
               >
-                Add New Luxury Ritual
+                {editingId ? "Edit Luxury Ritual" : "Add New Luxury Ritual"}
               </h2>
 
-              <form onSubmit={handleAddService} className="space-y-4 text-sm">
+              <form onSubmit={handleSaveService} className="space-y-4 text-sm">
                 <div>
                   <label className="block text-xs uppercase tracking-wider text-brand-muted mb-1">
                     Service Title *

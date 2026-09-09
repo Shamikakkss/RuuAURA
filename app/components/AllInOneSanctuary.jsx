@@ -1,367 +1,172 @@
 "use client";
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ==========================================
-// MOCK DATA (From index.html)
+// MOCK DATA & IMAGES (From user's specification)
 // ==========================================
-const DEFAULT_SERVICES = [
+const SLIDER_IMAGES = [
+  "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2574&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1600334129128-685c5582fc35?q=80&w=2670&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=2669&auto=format&fit=crop",
+];
+
+const SERVICES = [
   {
     id: "srv-1",
-    category: "hair",
-    title: "Signature Couture Haircut",
-    price: "$95",
-    rawPrice: 95,
-    duration: "60 Min",
-    tag: "Most Requested",
-    desc: "Sculptural precision haircut tailored to facial architecture, bone structure, and lifestyle. Includes scalp detox and organic blow-dry finish.",
-    products: "Oribe Gold Lust, Balmain Paris Hair Couture",
+    title: "Signature Haircut",
+    price: "From $85",
+    desc: "Tailored to your unique bone structure and lifestyle.",
     img: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "srv-2",
-    category: "hair",
-    title: "Dimensional Balayage & Glaze",
-    price: "$180",
-    rawPrice: 180,
-    duration: "135 Min",
-    tag: "Master Artistry",
-    desc: "Hand-painted bespoke highlights creating seamless, sun-lit dimension with custom gloss glaze and botanical bond-building treatment.",
-    products: "L'Oréal Professionnel Metal Detox, Wella Illumina",
+    title: "Balayage & Color",
+    price: "From $150",
+    desc: "Multi-dimensional color for a natural, sun-kissed look.",
     img: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "srv-3",
-    category: "spa",
-    title: "Caviar & Gold Radiance Facial",
-    price: "$145",
-    rawPrice: 145,
-    duration: "75 Min",
-    tag: "Sanctuary Exclusive",
-    desc: "Cellular rejuvenation utilizing micro-current sculpting, 24K gold infused botanical serums, and deep lymphatic cranial drainage.",
-    products: "Valmont Switzerland, Biologique Recherche",
+    title: "Spa & Facial",
+    price: "From $120",
+    desc: "Rejuvenating treatments using organic, premium products.",
     img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "srv-4",
-    category: "spa",
-    title: "Rosemary Herbal Scalp Therapy",
-    price: "$85",
-    rawPrice: 85,
-    duration: "45 Min",
-    tag: "Holistic",
-    desc: "Japanese head spa ritual with botanical micro-mist infusion, pressure-point tension relief, and pure cold-pressed rosemary oil.",
-    products: "Aveda Botanical Kinetics, Organic Rosemary Elixir",
-    img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1000&auto=format&fit=crop",
-  },
-  {
-    id: "srv-5",
-    category: "bridal",
-    title: "Grand Haute Bridal Styling",
-    price: "$280",
-    rawPrice: 280,
-    duration: "180 Min",
-    tag: "VIP Editorial",
-    desc: "Comprehensive luxury bridal design including high-fashion hair architecture, radiant HD editorial makeup, and veil placement.",
-    products: "Charlotte Tilbury, Tom Ford Beauty, Dyson Supersonic Pro",
+    title: "Bridal Styling",
+    price: "Custom",
+    desc: "Flawless hair and makeup for your most important day.",
     img: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop",
-  },
-  {
-    id: "srv-6",
-    category: "nails",
-    title: "Champagne Velvet Gel Couture",
-    price: "$70",
-    rawPrice: 70,
-    duration: "60 Min",
-    tag: "Nail Art",
-    desc: "Precision Russian dry manicure, organic apricot cuticle nourishment, and bespoke chrome or velvet magnet finish.",
-    products: "The GelBottle Inc, Bio Sculpture Gel",
-    img: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1000&auto=format&fit=crop",
   },
 ];
 
-const ARTISANS = [
+const TEAM_MEMBERS = [
   {
-    id: "art-1",
     name: "Elena Rostova",
-    role: "Artistic Director & Master Stylist",
-    specialty: "Couture Hair Architecture & Runway Cuts",
-    exp: "12+ Years Experience (Paris & London)",
-    rating: "4.98 ★",
+    role: "Creative Director",
     img: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=1000&auto=format&fit=crop",
   },
   {
-    id: "art-2",
     name: "Julian Vance",
-    role: "Master Colorist & Balayage Specialist",
-    specialty: "Editorial Color Melts & Dimensional Blonding",
-    exp: "10+ Years Experience (Milan & Dubai)",
-    rating: "4.96 ★",
+    role: "Master Colorist",
     img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop",
   },
   {
-    id: "art-3",
     name: "Sophia Chen",
-    role: "Holistic Aesthetician & Spa Director",
-    specialty: "Cellular Facial Therapy & Lymphatic Sculpting",
-    exp: "9+ Years Experience (Tokyo & Singapore)",
-    rating: "5.00 ★",
+    role: "Senior Stylist",
     img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop",
   },
-  {
-    id: "art-4",
-    name: "Camille Laurent",
-    role: "Lead Bridal & Makeup Artisan",
-    specialty: "High-Fashion Editorial & Radiant Bridal Looks",
-    exp: "8+ Years Experience (New York)",
-    rating: "4.97 ★",
-    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000&auto=format&fit=crop",
-  },
 ];
 
-const HERO_SLIDES = [
-  {
-    title: "ELEVATE YOUR AURA",
-    subtitle: "The Sanctuary of Haute Coiffure & Aesthetic Radiance",
-    tagline: "COLOMBO 07 • SANCTUARY OF ARTISANS",
-    img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2574&auto=format&fit=crop",
-  },
-  {
-    title: "TIMELESS ARTISTRY",
-    subtitle: "Bespoke Hair Sculpting & International Color Formulations",
-    tagline: "INDIVIDUALITY REDEFINED",
-    img: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=2574&auto=format&fit=crop",
-  },
-  {
-    title: "PURE TRANQUILITY",
-    subtitle: "Cellular Rejuvenation and Botanical Spa Rituals",
-    tagline: "EXCLUSIVE PRIVATE RETREAT",
-    img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2574&auto=format&fit=crop",
-  },
-];
-
-const SEED_BOOKINGS = [
-  {
-    id: "RA-2026-8910",
-    serviceTitle: "Signature Couture Haircut",
-    price: "$95",
-    duration: "60 Min",
-    artisanName: "Elena Rostova",
-    date: "2026-09-12",
-    time: "10:00 AM",
-    clientName: "Jane Sterling",
-    clientEmail: "jane.sterling@example.com",
-    clientPhone: "+94 77 123 4567",
-    notes: "Prefers subtle curtain bangs and lightweight blowout.",
-    status: "Confirmed",
-    createdAt: "2026-09-08",
-  },
-  {
-    id: "RA-2026-8911",
-    serviceTitle: "Caviar & Gold Radiance Facial",
-    price: "$145",
-    duration: "75 Min",
-    artisanName: "Sophia Chen",
-    date: "2026-09-14",
-    time: "02:30 PM",
-    clientName: "Amara Perera",
-    clientEmail: "amara.p@gmail.com",
-    clientPhone: "+94 71 889 9001",
-    notes: "Sensitive skin type, organic products requested.",
-    status: "Pending",
-    createdAt: "2026-09-09",
-  },
-  {
-    id: "RA-2026-8902",
-    serviceTitle: "Dimensional Balayage & Glaze",
-    price: "$180",
-    duration: "135 Min",
-    artisanName: "Julian Vance",
-    date: "2026-09-02",
-    time: "11:30 AM",
-    clientName: "Jane Sterling",
-    clientEmail: "jane.sterling@example.com",
-    clientPhone: "+94 77 123 4567",
-    notes: "Warm caramel tone finish.",
-    status: "Completed",
-    createdAt: "2026-08-28",
-  },
+const AVAILABILITY = [
+  { day: "Monday", hours: "Closed (Rest Day)" },
+  { day: "Tuesday - Friday", hours: "9:00 AM - 8:00 PM" },
+  { day: "Saturday", hours: "9:00 AM - 6:00 PM" },
+  { day: "Sunday", hours: "10:00 AM - 4:00 PM" },
 ];
 
 // ==========================================
-// ICONS (SVGs identical to index.html)
+// SVGs
 // ==========================================
-const Icons = {
-  Menu: () => (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-    >
-      <line x1="3" y1="7" x2="21" y2="7" />
-      <line x1="3" y1="17" x2="21" y2="17" />
-    </svg>
-  ),
-  Close: () => (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-    >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  ),
-  ArrowRight: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="5" y1="12" x2="19" y2="12" />
-      <polyline points="12 5 19 12 12 19" />
-    </svg>
-  ),
-  User: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  ),
-  Calendar: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  ),
-  Clock: () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
-  ),
-  MapPin: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  ),
-  CheckCircle: () => (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
-  ),
-  Shield: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  ),
-  Sparkle: () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-    </svg>
-  ),
-};
-
-// ==========================================
-// BRAND LOGO COMPONENT (RuuAURA)
-// ==========================================
-const BrandLogo = ({ onClick, className = "" }) => (
-  <div
-    onClick={onClick}
-    className={`cursor-pointer flex flex-col items-center select-none group ${className}`}
+const MenuIcon = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
   >
-    <div className="flex items-baseline gap-1">
-      <span
-        style={{ fontFamily: "var(--font-cinzel)" }}
-        className="text-2xl md:text-3xl font-semibold tracking-[0.25em] text-brand-cream group-hover:text-brand-gold transition-colors duration-300"
-      >
-        RUU<span className="text-brand-gold italic font-serif">AURA</span>
-      </span>
-    </div>
-    <div className="flex items-center gap-2 mt-1">
-      <span className="h-[1px] w-4 bg-brand-gold/40" />
-      <span className="text-[0.48rem] md:text-[0.55rem] font-sans tracking-[0.35em] uppercase text-brand-gold font-medium">
-        HAUTE BEAUTY SANCTUARY
-      </span>
-      <span className="h-[1px] w-4 bg-brand-gold/40" />
-    </div>
-  </div>
+    <line x1="4" y1="8" x2="20" y2="8" />
+    <line x1="4" y1="16" x2="20" y2="16" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const ArrowRightIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
 );
 
 // ==========================================
-// CUSTOM FLUID MAGNETIC CURSOR
+// ANIMATION HELPERS
+// ==========================================
+const RevealText = ({ children, delay = 0, className = "" }) => (
+  <div className="overflow-hidden">
+    <motion.div
+      initial={{ y: "100%", opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.8, ease: [0.6, 0.01, 0.05, 0.95], delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  </div>
+);
+
+const FadeIn = ({ children, delay = 0, className = "" }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-10%" }}
+    transition={{ duration: 0.8, ease: "easeOut", delay }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+);
+
+// ==========================================
+// CUSTOM CURSOR
 // ==========================================
 const CustomCursor = () => {
   const cursorRef = useRef(null);
@@ -379,39 +184,38 @@ const CustomCursor = () => {
       }
     };
 
-    const handleMouseEnter = () => {
-      if (cursorRef.current) {
+    const handleHover = () => {
+      if (cursorRef.current)
         cursorRef.current.classList.add(
-          "scale-[2.2]",
-          "bg-brand-gold/15",
-          "border-brand-gold"
+          "scale-[2]",
+          "bg-brand-gold",
+          "bg-opacity-20",
+          "border-transparent"
         );
-      }
     };
-    const handleMouseLeave = () => {
-      if (cursorRef.current) {
+    const handleLeave = () => {
+      if (cursorRef.current)
         cursorRef.current.classList.remove(
-          "scale-[2.2]",
-          "bg-brand-gold/15",
-          "border-brand-gold"
+          "scale-[2]",
+          "bg-brand-gold",
+          "bg-opacity-20",
+          "border-transparent"
         );
-      }
     };
 
     window.addEventListener("mousemove", moveCursor);
-    const interactables = document.querySelectorAll(
-      "a, button, input, select, textarea, [data-cursor-hover]"
-    );
+
+    const interactables = document.querySelectorAll("a, button, input, select, textarea");
     interactables.forEach((el) => {
-      el.addEventListener("mouseenter", handleMouseEnter);
-      el.addEventListener("mouseleave", handleMouseLeave);
+      el.addEventListener("mouseenter", handleHover);
+      el.addEventListener("mouseleave", handleLeave);
     });
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
       interactables.forEach((el) => {
-        el.removeEventListener("mouseenter", handleMouseEnter);
-        el.removeEventListener("mouseleave", handleMouseLeave);
+        el.removeEventListener("mouseenter", handleHover);
+        el.removeEventListener("mouseleave", handleLeave);
       });
     };
   });
@@ -420,12 +224,12 @@ const CustomCursor = () => {
     <>
       <div
         ref={cursorRef}
-        className="fixed top-0 left-0 w-8 h-8 border border-brand-gold/40 rounded-full pointer-events-none z-[9999] transition-transform duration-200 ease-out hidden lg:block"
+        className="fixed top-0 left-0 w-8 h-8 border border-brand-cream/30 rounded-full pointer-events-none z-[9999] transition-transform duration-300 ease-out hidden md:block"
         style={{ willChange: "transform" }}
       />
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 w-2 h-2 bg-brand-gold rounded-full pointer-events-none z-[9999] hidden lg:block"
+        className="fixed top-0 left-0 w-2 h-2 bg-brand-gold rounded-full pointer-events-none z-[9999] hidden md:block"
         style={{ willChange: "transform" }}
       />
     </>
@@ -433,95 +237,73 @@ const CustomCursor = () => {
 };
 
 // ==========================================
-// TOAST NOTIFICATION ENGINE
+// HERO SLIDER
 // ==========================================
-const ToastContainer = ({ toasts, removeToast }) => (
-  <div className="fixed bottom-6 right-6 z-[9990] flex flex-col gap-3 max-w-sm pointer-events-none">
-    <AnimatePresence>
-      {toasts.map((toast) => (
-        <motion.div
-          key={toast.id}
-          initial={{ opacity: 0, y: 30, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className={`pointer-events-auto flex items-center gap-3.5 px-5 py-4 border shadow-2xl backdrop-blur-md rounded-sm ${
-            toast.type === "error"
-              ? "bg-brand-error/90 border-brand-error text-white"
-              : toast.type === "info"
-              ? "bg-brand-surface/95 border-brand-gold/40 text-brand-cream"
-              : "bg-brand-dark/95 border-brand-gold/60 text-brand-cream"
-          }`}
-        >
-          <span className="text-brand-gold">
-            <Icons.Sparkle />
-          </span>
-          <div className="text-xs font-sans font-medium tracking-wide flex-1">
-            {toast.message}
-          </div>
-          <button
-            onClick={() => removeToast(toast.id)}
-            className="text-brand-muted hover:text-white transition-colors"
-          >
-            <Icons.Close />
-          </button>
-        </motion.div>
-      ))}
-    </AnimatePresence>
-  </div>
-);
+const HeroSlider = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-// ==========================================
-// LUXURY REVEAL TEXT & FADE HELPERS
-// ==========================================
-const RevealText = ({ children, delay = 0, className = "" }) => (
-  <div className="overflow-hidden">
-    <motion.div
-      initial={{ y: "100%", opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      viewport={{ once: true, margin: "-8%" }}
-      transition={{ duration: 0.85, ease: [0.6, 0.01, 0.05, 0.95], delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  </div>
-);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % SLIDER_IMAGES.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
 
-const FadeIn = ({ children, delay = 0, className = "", y = 24 }) => (
-  <motion.div
-    initial={{ opacity: 0, y }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-8%" }}
-    transition={{ duration: 0.75, ease: "easeOut", delay }}
-    className={className}
-  >
-    {children}
-  </motion.div>
-);
-
-// ==========================================
-// EDITORIAL LUXURY MARQUEE
-// ==========================================
-const Marquee = () => {
-  const items = [
-    "ELEVATING HAUTE BEAUTY CULTURE",
-    "BESPOKE HAIR ARCHITECTURE",
-    "MASTER BOTANICAL SPA RITUALS",
-    "EDITORIAL BRIDAL COUTURE",
-    "COLOMBO 07 SANCTUARY",
-    "ORGANIC CERTIFIED LUXURY FORMULAS",
-  ];
   return (
-    <div className="w-full bg-brand-dark py-4 overflow-hidden border-y border-white/5 whitespace-nowrap select-none">
-      <div className="animate-marquee flex items-center">
-        {[...items, ...items].map((text, i) => (
-          <div key={i} className="flex items-center gap-6 px-6">
-            <span className="text-[11px] font-sans tracking-[0.3em] uppercase text-brand-cream/80 font-medium hover:text-brand-gold transition-colors">
-              {text}
-            </span>
-            <span className="text-brand-gold text-[10px]">✦</span>
-          </div>
+    <div className="relative w-full h-screen overflow-hidden bg-brand-black">
+      <AnimatePresence initial={false}>
+        <motion.img
+          key={currentIndex}
+          src={SLIDER_IMAGES[currentIndex]}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 0.6, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            opacity: { duration: 1.5, ease: "easeInOut" },
+            scale: { duration: 6, ease: "linear" },
+          }}
+          className="absolute inset-0 w-full h-full object-cover"
+          alt="Salon Interior"
+        />
+      </AnimatePresence>
+
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent opacity-80" />
+
+      {/* Content */}
+      <div className="absolute inset-0 flex flex-col justify-end pb-20 md:pb-32 px-6 md:px-16 z-10">
+        <div className="max-w-4xl">
+          <RevealText>
+            <h2 className="text-brand-gold font-sans tracking-[0.25em] text-xs md:text-sm uppercase mb-4">
+              RuuAURA Beauty Sanctuary
+            </h2>
+          </RevealText>
+          <RevealText delay={0.2}>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif leading-tight text-brand-cream">
+              Elegance,
+              <br /> <span className="italic font-light">Redefined.</span>
+            </h1>
+          </RevealText>
+          <RevealText delay={0.4}>
+            <p className="mt-6 text-brand-cream/70 font-sans text-sm md:text-base max-w-md font-light leading-relaxed">
+              Experience the pinnacle of luxury grooming and beauty treatments in
+              a space designed for your absolute comfort.
+            </p>
+          </RevealText>
+        </div>
+      </div>
+
+      {/* Slider Indicators */}
+      <div className="absolute bottom-8 right-6 md:right-16 flex gap-3 z-10">
+        {SLIDER_IMAGES.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentIndex(idx)}
+            className={`h-0.5 transition-all duration-500 ${
+              currentIndex === idx ? "w-12 bg-brand-gold" : "w-6 bg-brand-cream/30"
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
         ))}
       </div>
     </div>
@@ -529,24 +311,30 @@ const Marquee = () => {
 };
 
 // ==========================================
-// NAVIGATION & HEADER COMPONENT
+// NAVIGATION COMPONENT (RuuAURA + Sign In)
 // ==========================================
-const Navigation = ({ currentRoute, setRoute, bookingCount }) => {
+const Navigation = ({ currentRoute, setRoute }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // 3 Primary Nav Links: Home, About Us, Services
   const navLinks = [
-    { name: "Sanctuary", id: "home" },
-    { name: "Our Story", id: "about" },
-    { name: "Curated Services", id: "services" },
-    { name: "The Artisans", id: "team" },
-    { name: "Location & Map", id: "location" },
+    { name: "Home", id: "home" },
+    { name: "About Us", id: "about" },
+    { name: "Services", id: "services" },
+  ];
+
+  const drawerLinks = [
+    { name: "Home", id: "home" },
+    { name: "About Us", id: "about" },
+    { name: "Services", id: "services" },
+    { name: "The Team", id: "team" },
   ];
 
   const handleNavigate = (id) => {
@@ -557,23 +345,32 @@ const Navigation = ({ currentRoute, setRoute, bookingCount }) => {
 
   return (
     <>
+      {/* Top Bar */}
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-500 ${
           scrolled
-            ? "bg-brand-black/95 backdrop-blur-md border-b border-brand-border py-4 shadow-xl"
-            : "bg-gradient-to-b from-brand-black/80 via-brand-black/30 to-transparent py-6 md:py-8"
+            ? "bg-brand-black/95 py-4 backdrop-blur-sm"
+            : "bg-transparent py-6 md:py-8"
         }`}
       >
-        <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
-          <BrandLogo onClick={() => handleNavigate("home")} />
+        <div className="container mx-auto px-6 md:px-16 flex justify-between items-center">
+          {/* Logo: RuuAURA */}
+          <div
+            className="cursor-pointer group select-none flex items-center"
+            onClick={() => handleNavigate("home")}
+          >
+            <div className="text-2xl md:text-3xl font-serif tracking-wider text-brand-cream group-hover:text-brand-gold transition-colors font-bold">
+              RuuAURA<span className="text-brand-gold">.</span>
+            </div>
+          </div>
 
-          {/* Center Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-5 xl:gap-8">
+          {/* 3 Main Navigation Links in Center */}
+          <nav className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => handleNavigate(link.id)}
-                className={`text-xs font-sans tracking-[0.2em] uppercase transition-all duration-300 relative py-1 ${
+                className={`text-xs font-sans tracking-[0.2em] uppercase transition-colors relative py-1 ${
                   currentRoute === link.id
                     ? "text-brand-gold font-semibold"
                     : "text-brand-cream/80 hover:text-brand-gold"
@@ -590,122 +387,147 @@ const Navigation = ({ currentRoute, setRoute, bookingCount }) => {
             ))}
           </nav>
 
-          {/* Right Action Trigger Buttons */}
+          {/* Right Actions: Login Button + Book Now + Menu */}
           <div className="flex items-center gap-4 md:gap-6">
-            <button
-              onClick={() => handleNavigate("account")}
-              className={`text-xs tracking-[0.2em] uppercase font-sans flex items-center gap-2 transition-colors py-2 px-3 rounded ${
-                currentRoute === "account"
-                  ? "text-brand-gold"
-                  : "text-brand-cream hover:text-brand-gold"
-              }`}
-              title="Customer Portal"
+            <Link
+              href="/login"
+              className="text-xs font-sans tracking-[0.15em] uppercase text-brand-cream/90 hover:text-brand-gold transition-colors px-3 py-2 border border-white/20 hover:border-brand-gold/60"
             >
-              <Icons.User />
-              <span className="hidden sm:inline">My AURA</span>
-            </button>
+              Sign In
+            </Link>
 
             <button
               onClick={() => handleNavigate("booking")}
-              className="hidden sm:flex items-center gap-2 text-brand-black bg-brand-gold hover:bg-brand-cream px-6 py-2.5 text-xs font-sans tracking-[0.2em] uppercase font-semibold transition-all duration-300 shadow-md hover:shadow-brand-gold/20"
+              className="text-brand-black bg-brand-gold px-5 md:px-6 py-2 md:py-2.5 text-xs tracking-[0.2em] uppercase font-semibold hover:bg-white transition-colors duration-300"
             >
-              <span>Reserve</span>
-              <Icons.ArrowRight />
+              Book Now
             </button>
 
             <button
               onClick={() => setIsOpen(true)}
-              className="text-brand-cream hover:text-brand-gold transition-colors flex items-center gap-2.5 uppercase text-xs tracking-widest font-sans p-2"
-              aria-label="Toggle Navigation Drawer"
+              className="text-brand-cream hover:text-brand-gold transition-colors flex items-center gap-2.5 uppercase text-xs tracking-widest font-sans pl-1"
             >
-              <span className="hidden md:block text-[11px] tracking-[0.25em]">
-                Menu
-              </span>
-              <Icons.Menu />
+              <span className="hidden md:block">Menu</span>
+              <MenuIcon />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Full-Screen Luxury Menu Drawer */}
+      {/* Full Screen Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 bg-brand-dark/95 backdrop-blur-xl z-[60] flex flex-col justify-between p-6 md:p-16 overflow-y-auto"
+            initial={{ y: "-100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "-100%" }}
+            transition={{ duration: 0.8, ease: [0.6, 0.01, -0.05, 0.95] }}
+            className="fixed inset-0 bg-brand-dark z-[60] flex flex-col justify-between py-8 px-6 md:px-24 overflow-y-auto"
           >
-            <div className="flex justify-between items-center border-b border-brand-border pb-6">
-              <BrandLogo onClick={() => handleNavigate("home")} />
+            {/* Drawer Header */}
+            <div className="w-full flex justify-between items-center">
+              <div
+                className="cursor-pointer flex items-center"
+                onClick={() => handleNavigate("home")}
+              >
+                <div className="text-2xl md:text-3xl font-serif tracking-wider text-brand-cream font-bold">
+                  RuuAURA<span className="text-brand-gold">.</span>
+                </div>
+              </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-brand-cream hover:text-brand-gold transition-colors flex items-center gap-2 uppercase text-xs tracking-widest font-sans border border-brand-border hover:border-brand-gold px-4 py-2"
+                className="text-brand-cream hover:text-brand-gold transition-colors flex items-center gap-3 uppercase text-xs tracking-widest"
               >
-                <span>Close</span>
-                <Icons.Close />
+                <span className="hidden md:block">Close</span>
+                <CloseIcon />
               </button>
             </div>
 
-            <div className="my-auto py-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-12 container mx-auto">
-              <nav className="flex flex-col gap-6 md:gap-8">
-                {navLinks.map((link, i) => (
+            {/* Navigation items */}
+            <div className="my-auto py-8">
+              <nav className="flex flex-col gap-4 md:gap-7">
+                {drawerLinks.map((link, i) => (
                   <div key={link.id} className="overflow-hidden">
                     <motion.div
                       initial={{ y: "100%" }}
                       animate={{ y: 0 }}
+                      exit={{ y: "100%" }}
                       transition={{
                         duration: 0.5,
-                        delay: 0.1 + i * 0.08,
+                        delay: 0.2 + i * 0.1,
                         ease: "easeOut",
                       }}
                     >
                       <button
                         onClick={() => handleNavigate(link.id)}
-                        className={`text-4xl md:text-6xl lg:text-7xl font-serif text-left transition-all group flex items-center gap-6 ${
+                        className={`text-4xl md:text-6xl font-serif transition-colors text-left group flex items-center gap-6 ${
                           currentRoute === link.id
-                            ? "text-brand-gold italic pl-4 border-l-2 border-brand-gold"
-                            : "text-brand-cream hover:text-brand-gold hover:italic hover:translate-x-3"
+                            ? "text-brand-gold italic"
+                            : "text-brand-cream hover:text-brand-gold hover:italic"
                         }`}
                       >
+                        <span className="text-xs font-sans text-brand-muted mb-4 md:mb-8 hidden md:block group-hover:text-brand-gold transition-colors">
+                          0{i + 1}
+                        </span>
                         {link.name}
                       </button>
                     </motion.div>
                   </div>
                 ))}
-              </nav>
 
-              <div className="w-full md:w-80 bg-brand-surface border border-brand-border p-8 flex flex-col gap-6">
-                <div className="flex items-center gap-2 text-brand-gold text-xs font-sans tracking-widest uppercase">
-                  <Icons.Sparkle /> Quick Access
+                {/* Direct Portals Section */}
+                <div className="flex flex-wrap gap-4 mt-6 pt-6 border-t border-white/10">
+                  <Link
+                    href="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="text-xs font-sans tracking-widest uppercase text-brand-gold hover:text-white transition-colors py-2 px-4 border border-brand-gold/40"
+                  >
+                    Client Sign In
+                  </Link>
+                  <Link
+                    href="/account"
+                    onClick={() => setIsOpen(false)}
+                    className="text-xs font-sans tracking-widest uppercase text-brand-cream/80 hover:text-brand-gold transition-colors py-2 px-4 border border-white/10"
+                  >
+                    Customer Account
+                  </Link>
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="text-xs font-sans tracking-widest uppercase text-brand-cream/60 hover:text-brand-gold transition-colors py-2 px-4 border border-white/10"
+                  >
+                    Admin Portal
+                  </Link>
                 </div>
-                <button
-                  onClick={() => handleNavigate("booking")}
-                  className="w-full text-brand-black bg-brand-gold hover:bg-white py-3.5 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all text-center"
-                >
-                  Book Appointment
-                </button>
-                <button
-                  onClick={() => handleNavigate("account")}
-                  className="w-full text-brand-cream hover:text-brand-gold border border-brand-border py-3 text-xs font-sans tracking-[0.2em] uppercase font-medium transition-all text-center flex items-center justify-center gap-2"
-                >
-                  <Icons.User /> Customer Portal
-                </button>
-                <button
-                  onClick={() => handleNavigate("admin")}
-                  className="w-full text-brand-muted hover:text-brand-cream text-[11px] font-sans tracking-widest uppercase transition-colors text-center pt-2"
-                >
-                  Admin Concierge Desk →
-                </button>
-              </div>
+
+                {/* Mobile Book Now Link in Menu */}
+                <div className="md:hidden overflow-hidden mt-4">
+                  <button
+                    onClick={() => handleNavigate("booking")}
+                    className="text-brand-black bg-brand-gold px-8 py-4 text-xs tracking-[0.2em] uppercase font-semibold w-full"
+                  >
+                    Book an Appointment
+                  </button>
+                </div>
+              </nav>
             </div>
 
-            <div className="border-t border-brand-border pt-6 flex flex-col md:flex-row justify-between items-start md:items-center text-xs text-brand-muted gap-4">
-              <p>142 Ward Place, Cinnamon Gardens, Colombo 07</p>
-              <p>Concierge: concierge@ruuaura.lk • +94 11 268 9400</p>
-              <p>© 2026 RuuAURA Haute Beauty Sanctuary.</p>
-            </div>
+            {/* Drawer Footer info */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="text-xs text-brand-muted font-sans flex flex-col md:flex-row justify-between gap-4 pt-6 border-t border-white/10"
+            >
+              <div>
+                <p className="text-brand-cream mb-1">Location</p>
+                <p>142 Ward Place, Colombo 07</p>
+              </div>
+              <div>
+                <p className="text-brand-cream mb-1">Contact</p>
+                <p>info@ruuaura.lk • +94 77 123 4567</p>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -714,452 +536,74 @@ const Navigation = ({ currentRoute, setRoute, bookingCount }) => {
 };
 
 // ==========================================
-// QUICK-VIEW SERVICE MODAL
+// HOME PAGE VIEW
 // ==========================================
-const ServiceModal = ({ service, onClose, onBook }) => {
-  if (!service) return null;
-  return (
-    <div className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 md:p-8">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="bg-brand-surface border border-brand-border max-w-2xl w-full overflow-hidden shadow-2xl relative"
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-brand-black/80 border border-brand-border text-brand-cream hover:text-brand-gold flex items-center justify-center transition-colors"
-        >
-          <Icons.Close />
-        </button>
-
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="h-64 md:h-full relative overflow-hidden bg-brand-dark min-h-[220px]">
-            <img
-              src={service.img}
-              alt={service.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute top-4 left-4 bg-brand-gold text-brand-black px-2.5 py-1 text-[10px] font-sans uppercase tracking-widest font-bold">
-              {service.tag}
-            </div>
-          </div>
-
-          <div className="p-6 md:p-8 flex flex-col justify-between">
-            <div>
-              <span className="text-[10px] font-sans tracking-[0.25em] uppercase text-brand-gold block mb-1">
-                {service.category.toUpperCase()} RITUAL
-              </span>
-              <h3 className="text-2xl font-serif text-brand-cream mb-3">
-                {service.title}
-              </h3>
-
-              <div className="flex items-center gap-4 text-xs font-sans text-brand-muted border-y border-brand-border py-2.5 my-4">
-                <span className="flex items-center gap-1.5">
-                  <Icons.Clock /> {service.duration}
-                </span>
-                <span>•</span>
-                <span className="text-brand-gold font-semibold text-sm">
-                  {service.price}
-                </span>
-              </div>
-
-              <p className="text-sm font-sans text-brand-cream/80 font-light leading-relaxed mb-4">
-                {service.desc}
-              </p>
-
-              <div className="bg-brand-dark/70 p-3.5 border border-brand-border mb-6">
-                <span className="text-[10px] font-sans tracking-widest uppercase text-brand-gold block mb-1">
-                  Signature Formulations
-                </span>
-                <p className="text-xs font-sans text-brand-cream/70 italic">
-                  {service.products}
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                onClose();
-                onBook(service);
-              }}
-              className="w-full bg-brand-gold hover:bg-brand-cream text-brand-black py-3.5 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all flex items-center justify-center gap-2"
-            >
-              <span>Reserve This Experience</span>
-              <Icons.ArrowRight />
-            </button>
-          </div>
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
-// ==========================================
-// HOME / SANCTUARY PAGE (Exact matching index.html)
-// ==========================================
-const HomePage = ({ setRoute, onSelectServiceForBooking }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeServiceModal, setActiveServiceModal] = useState(null);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 7000);
-    return () => clearInterval(interval);
-  }, []);
-
+const HomePage = ({ setRoute }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.6 }}
     >
-      {/* HERO SLIDER SECTION */}
-      <div className="relative w-full h-[92vh] md:h-screen overflow-hidden bg-brand-black flex items-center">
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, scale: 1.08 }}
-            animate={{ opacity: 0.48, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              opacity: { duration: 1.4, ease: "easeInOut" },
-              scale: { duration: 7, ease: "linear" },
-            }}
-            className="absolute inset-0 w-full h-full"
-          >
-            <img
-              src={HERO_SLIDES[currentSlide].img}
-              alt="RuuAURA Sanctuary"
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
-        </AnimatePresence>
+      <HeroSlider />
 
-        {/* Luxury Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/50 to-brand-black/70" />
-        <div className="absolute inset-0 ambient-glow" />
-
-        {/* Hero Content */}
-        <div className="container mx-auto px-6 md:px-12 relative z-10 pt-24 md:pt-20 pb-24 flex flex-col items-center text-center">
-          <RevealText>
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 border border-brand-gold/30 bg-brand-dark/60 backdrop-blur-md mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-pulse" />
-              <span className="text-[10px] md:text-xs font-sans tracking-[0.3em] uppercase text-brand-gold font-medium">
-                {HERO_SLIDES[currentSlide].tagline}
-              </span>
-            </div>
-          </RevealText>
-
-          <RevealText delay={0.2}>
-            <h1
-              style={{ fontFamily: "var(--font-cinzel)" }}
-              className="text-5xl md:text-7xl lg:text-9xl font-normal tracking-tight text-brand-cream leading-none"
-            >
-              RUU<span className="text-brand-gold italic font-serif">AURA</span>
-            </h1>
-          </RevealText>
-
-          <RevealText delay={0.35}>
-            <p className="mt-4 md:mt-6 max-w-2xl text-lg md:text-2xl font-serif italic leading-relaxed text-brand-cream-muted">
-              {HERO_SLIDES[currentSlide].subtitle}
-            </p>
-          </RevealText>
-
-          <FadeIn delay={0.5} className="mt-14 md:mt-16 flex flex-col sm:flex-row gap-4 sm:gap-6">
-            <button
-              onClick={() => setRoute("booking")}
-              className="bg-brand-gold hover:bg-brand-cream text-brand-black px-9 py-4 text-xs font-sans tracking-[0.25em] uppercase font-bold transition-all duration-300 shadow-xl flex items-center justify-center gap-3"
-            >
-              <span>Reserve Your Appointment</span>
-              <Icons.ArrowRight />
-            </button>
-            <button
-              onClick={() => setRoute("services")}
-              className="border border-brand-cream/30 hover:border-brand-gold text-brand-cream hover:text-brand-gold px-8 py-4 text-xs font-sans tracking-[0.25em] uppercase font-medium transition-all duration-300 backdrop-blur-sm"
-            >
-              Explore Curations
-            </button>
-          </FadeIn>
-
-          {/* Slide Progress Indicator Bar */}
-          <div className="absolute bottom-10 flex items-center gap-3">
-            {HERO_SLIDES.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentSlide(i)}
-                className="group py-2 flex items-center"
-                aria-label={`Go to slide ${i + 1}`}
-              >
-                <span
-                  className={`h-1 transition-all duration-500 rounded-full ${
-                    currentSlide === i
-                      ? "w-10 bg-brand-gold"
-                      : "w-3 bg-white/20 group-hover:bg-white/40"
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <Marquee />
-
-      {/* BRAND PHILOSOPHY & STORY TEASER */}
-      <section className="py-24 md:py-36 px-6 md:px-12 container mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-5">
+      {/* Brief Intro Section */}
+      <section className="py-24 md:py-40 px-6 md:px-16 container mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+          <div className="w-full md:w-1/3">
             <RevealText>
-              <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold font-medium block mb-3">
-                THE PHILOSOPHY OF AURA
-              </span>
+              <h3 className="font-sans text-brand-gold uppercase tracking-widest text-xs mb-4">
+                Our Philosophy
+              </h3>
             </RevealText>
-            <RevealText delay={0.15}>
-              <h2 className="text-3xl md:text-5xl font-serif leading-tight text-brand-cream">
-                Where Haute Artistry Meets{" "}
-                <span className="italic text-brand-gold">
-                  Harmonious Tranquility.
-                </span>
+            <RevealText delay={0.2}>
+              <h2 className="text-3xl md:text-5xl font-serif leading-tight">
+                Artistry in <br />
+                <span className="italic text-brand-gold">every detail.</span>
               </h2>
             </RevealText>
-            <FadeIn
-              delay={0.3}
-              className="mt-6 space-y-4 text-brand-cream/70 font-sans font-light leading-relaxed text-sm md:text-base"
-            >
-              <p>
-                Founded on the belief that true aesthetic elegance is deeply
-                personal, <strong>RuuAURA</strong> transcends the conventional
-                salon experience. We have curated a private sanctuary where time
-                decelerates, allowing our master artisans to sculpt, color, and
-                restore with uncompromising devotion.
+          </div>
+          <div className="w-full md:w-1/2 md:mt-12">
+            <FadeIn delay={0.4}>
+              <p className="text-brand-cream/80 font-sans font-light leading-relaxed text-lg mb-8">
+                We believe beauty is not just a service, but an experience. At
+                RuuAURA, our master stylists and therapists craft personalized
+                treatments in an environment of pure tranquility and luxury.
               </p>
-              <p>
-                Every ritual harmonizes world-renowned organic formulations with
-                scientific precision, celebrating your natural allure.
-              </p>
-            </FadeIn>
-            <FadeIn delay={0.4} className="mt-8">
               <button
-                onClick={() => setRoute("about")}
-                className="inline-flex items-center gap-3 text-xs tracking-[0.2em] font-sans uppercase text-brand-cream hover:text-brand-gold border-b border-brand-gold pb-1.5 transition-colors"
+                onClick={() => {
+                  setRoute("about");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="inline-flex items-center gap-3 text-sm tracking-widest font-sans uppercase border-b border-brand-gold pb-1 hover:text-brand-gold transition-colors"
               >
-                <span>Discover Our Sanctuary & Origins</span>
-                <Icons.ArrowRight />
+                Discover Our Story <ArrowRightIcon />
               </button>
             </FadeIn>
           </div>
+        </div>
+      </section>
 
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <FadeIn delay={0.2} className="relative group overflow-hidden bg-brand-card">
-              <div className="aspect-[4/5] overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop"
-                  alt="Artisan Styling"
-                  className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                />
-              </div>
-              <div className="p-5 border-t border-brand-border">
-                <span className="text-[10px] font-sans tracking-widest uppercase text-brand-gold block">
-                  CRAFT
-                </span>
-                <h4 className="font-serif text-lg text-brand-cream">
-                  Bespoke Hair Architecture
-                </h4>
-              </div>
-            </FadeIn>
-
-            <FadeIn
-              delay={0.35}
-              className="relative group overflow-hidden bg-brand-card sm:mt-12"
-            >
-              <div className="aspect-[4/5] overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop"
-                  alt="Botanical Spa Sanctuary"
-                  className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                />
-              </div>
-              <div className="p-5 border-t border-brand-border">
-                <span className="text-[10px] font-sans tracking-widest uppercase text-brand-gold block">
-                  REJUVENATION
-                </span>
-                <h4 className="font-serif text-lg text-brand-cream">
-                  Cellular Botanical Facials
-                </h4>
-              </div>
-            </FadeIn>
+      {/* Featured Image */}
+      <section className="px-6 md:px-16 pb-24 md:pb-40 container mx-auto">
+        <FadeIn>
+          <div className="w-full h-[60vh] md:h-[80vh] relative overflow-hidden group">
+            <img
+              src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2670&auto=format&fit=crop"
+              className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
+              alt="Salon Experience"
+            />
+            <div className="absolute inset-0 bg-black/20" />
           </div>
-        </div>
+        </FadeIn>
       </section>
-
-      {/* FEATURED SIGNATURE CURATIONS */}
-      <section className="py-24 bg-brand-dark/50 border-t border-brand-border">
-        <div className="container mx-auto px-6 md:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
-            <div>
-              <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold font-medium block mb-2">
-                SIGNATURE CURATIONS
-              </span>
-              <h2 className="text-3xl md:text-5xl font-serif text-brand-cream">
-                Master Rituals &{" "}
-                <span className="italic text-brand-gold">Treatments.</span>
-              </h2>
-            </div>
-            <button
-              onClick={() => setRoute("services")}
-              className="text-xs font-sans tracking-[0.2em] uppercase text-brand-cream hover:text-brand-gold flex items-center gap-2 border border-brand-border hover:border-brand-gold px-5 py-3 transition-colors"
-            >
-              <span>View Complete Catalog ({DEFAULT_SERVICES.length})</span>
-              <Icons.ArrowRight />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {DEFAULT_SERVICES.slice(0, 3).map((service, idx) => (
-              <FadeIn
-                key={service.id}
-                delay={0.15 * idx}
-                className="bg-brand-surface border border-brand-border group hover:border-brand-gold/60 transition-all duration-500 flex flex-col justify-between"
-              >
-                <div>
-                  <div
-                    className="relative aspect-[16/10] overflow-hidden bg-brand-dark cursor-pointer"
-                    onClick={() => setActiveServiceModal(service)}
-                  >
-                    <img
-                      src={service.img}
-                      alt={service.title}
-                      className="w-full h-full object-cover grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                    />
-                    <span className="absolute top-3 right-3 bg-brand-black/80 backdrop-blur-md text-brand-gold px-2.5 py-1 text-[10px] font-sans uppercase tracking-widest font-semibold border border-brand-gold/20">
-                      {service.price}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-center text-[10px] uppercase font-sans tracking-widest text-brand-muted mb-2">
-                      <span>{service.category.toUpperCase()}</span>
-                      <span>{service.duration}</span>
-                    </div>
-                    <h3 className="font-serif text-xl text-brand-cream group-hover:text-brand-gold transition-colors mb-3">
-                      {service.title}
-                    </h3>
-                    <p className="text-xs font-sans text-brand-cream/70 font-light leading-relaxed line-clamp-2">
-                      {service.desc}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-6 pt-0 flex items-center justify-between border-t border-brand-border/40 mt-4">
-                  <button
-                    onClick={() => setActiveServiceModal(service)}
-                    className="text-[11px] font-sans tracking-wider uppercase text-brand-muted hover:text-brand-cream transition-colors"
-                  >
-                    Details
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (onSelectServiceForBooking)
-                        onSelectServiceForBooking(service);
-                      setRoute("booking");
-                    }}
-                    className="text-[11px] font-sans tracking-widest uppercase text-brand-gold hover:text-white flex items-center gap-1.5 font-semibold transition-colors"
-                  >
-                    <span>Book Now</span>
-                    <Icons.ArrowRight />
-                  </button>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ARTISAN DIRECTORS TEASER */}
-      <section className="py-24 px-6 md:px-12 container mx-auto">
-        <div className="max-w-3xl mb-16">
-          <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold font-medium block mb-2">
-            HAUTE ARTISANS
-          </span>
-          <h2 className="text-3xl md:text-5xl font-serif text-brand-cream mb-4">
-            Guided by{" "}
-            <span className="italic text-brand-gold">Master Visionaries.</span>
-          </h2>
-          <p className="text-sm font-sans text-brand-cream/70 font-light leading-relaxed">
-            Our collective unites internationally trained directors from Paris,
-            Milan, and Tokyo who treat cosmetology as high-end editorial art.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {ARTISANS.map((artisan, idx) => (
-            <FadeIn key={artisan.id} delay={0.1 * idx} className="group">
-              <div className="aspect-[3/4] overflow-hidden bg-brand-card border border-brand-border mb-4">
-                <img
-                  src={artisan.img}
-                  alt={artisan.name}
-                  className="w-full h-full object-cover grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                />
-              </div>
-              <h3 className="text-xl font-serif text-brand-cream group-hover:text-brand-gold transition-colors">
-                {artisan.name}
-              </h3>
-              <p className="text-[10px] font-sans tracking-[0.2em] uppercase text-brand-gold mt-1">
-                {artisan.role}
-              </p>
-              <p className="text-xs text-brand-muted font-sans font-light mt-2">
-                {artisan.specialty}
-              </p>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA BANNER */}
-      <section className="py-20 bg-brand-surface border-y border-brand-border relative overflow-hidden">
-        <div className="container mx-auto px-6 md:px-12 text-center relative z-10">
-          <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold block mb-3">
-            SECURE YOUR TIME AT WARD PLACE
-          </span>
-          <h2 className="text-3xl md:text-5xl font-serif text-brand-cream mb-6">
-            Experience the <span className="italic text-brand-gold">RuuAURA</span>{" "}
-            Difference.
-          </h2>
-          <p className="text-sm font-sans text-brand-cream/70 max-w-xl mx-auto mb-8 font-light">
-            Appointments are limited to preserve intimacy and personalized
-            attention for every guest.
-          </p>
-          <button
-            onClick={() => setRoute("booking")}
-            className="bg-brand-gold hover:bg-brand-cream text-brand-black px-10 py-4 text-xs font-sans tracking-[0.25em] uppercase font-bold transition-all shadow-xl inline-flex items-center gap-2"
-          >
-            <span>Reserve Your Appointment</span>
-            <Icons.ArrowRight />
-          </button>
-        </div>
-      </section>
-
-      {/* Quick View Modal */}
-      <AnimatePresence>
-        {activeServiceModal && (
-          <ServiceModal
-            service={activeServiceModal}
-            onClose={() => setActiveServiceModal(null)}
-            onBook={(service) => {
-              if (onSelectServiceForBooking) onSelectServiceForBooking(service);
-              setRoute("booking");
-            }}
-          />
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 };
 
 // ==========================================
-// ABOUT / OUR STORY PAGE
+// ABOUT US PAGE VIEW
 // ==========================================
 const AboutPage = ({ setRoute }) => {
   return (
@@ -1167,498 +611,69 @@ const AboutPage = ({ setRoute }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="pt-32 pb-24 md:pt-44 md:pb-36 px-6 md:px-12 container mx-auto min-h-screen"
+      transition={{ duration: 0.6 }}
+      className="pt-32 pb-24 md:pt-48 md:pb-40 px-6 md:px-16 container mx-auto min-h-screen"
     >
-      <div className="max-w-4xl mx-auto mb-20 text-center">
-        <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold block mb-3">
-          OUR ORIGIN & VALUES
-        </span>
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-brand-cream">
-          The Sanctuary of <span className="italic text-brand-gold">Elegance.</span>
+      <RevealText>
+        <h1 className="text-5xl md:text-8xl font-serif mb-8 md:mb-16">
+          The <span className="italic text-brand-gold">Sanctuary.</span>
         </h1>
-        <p className="mt-6 text-base md:text-lg font-sans text-brand-cream/70 font-light leading-relaxed">
-          Established in the historic heart of Cinnamon Gardens, Colombo, RuuAURA
-          was conceptualized as an antidote to industrial rush—a haven of privacy,
-          craft, and personalized luxury.
-        </p>
-      </div>
+      </RevealText>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center mb-28">
-        <FadeIn>
-          <div className="aspect-[4/5] bg-brand-dark overflow-hidden border border-brand-border">
-            <img
-              src="https://images.unsplash.com/photo-1595476108010-b4d1f10d5e42?q=80&w=1000&auto=format&fit=crop"
-              alt="RuuAURA Styling Detail"
-              className="w-full h-full object-cover grayscale opacity-90 hover:grayscale-0 transition-all duration-700"
-            />
-          </div>
-        </FadeIn>
-
-        <div className="flex flex-col gap-8">
+      <div className="flex flex-col md:flex-row gap-12 md:gap-24 items-start">
+        <div className="w-full md:w-1/2">
           <FadeIn delay={0.2}>
-            <h3 className="text-xs font-sans uppercase tracking-[0.25em] text-brand-gold font-semibold mb-2">
-              01 • EXCLUSIVE APPOINTMENT-ONLY POLICY
-            </h3>
-            <p className="text-sm md:text-base font-sans text-brand-cream/80 font-light leading-relaxed">
-              To guarantee unhurried attention, we operate on a strictly managed
-              reservation schedule. Each guest receives one-on-one consultation
-              with their designated artisan without overlapping disruptions.
-            </p>
-          </FadeIn>
-
-          <FadeIn delay={0.35}>
-            <h3 className="text-xs font-sans uppercase tracking-[0.25em] text-brand-gold font-semibold mb-2">
-              02 • BIO-ETHICAL & ORGANIC FORMULATIONS
-            </h3>
-            <p className="text-sm md:text-base font-sans text-brand-cream/80 font-light leading-relaxed">
-              We exclusively partner with prestigious European eco-certified
-              laboratories (Oribe, Valmont, Biologique Recherche) delivering
-              uncompromising aesthetic results while safeguarding hair and
-              cellular health.
-            </p>
-          </FadeIn>
-
-          <FadeIn delay={0.5}>
-            <h3 className="text-xs font-sans uppercase tracking-[0.25em] text-brand-gold font-semibold mb-2">
-              03 • TAILORED ARCHITECTURE
-            </h3>
-            <p className="text-sm md:text-base font-sans text-brand-cream/80 font-light leading-relaxed">
-              No two treatments are identical. We analyze bone angles, hair
-              texture, skin tone, and personal lifestyle to forge a silhouette
-              uniquely yours.
-            </p>
+            <div className="aspect-[3/4] overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1000&auto=format&fit=crop"
+                className="w-full h-full object-cover"
+                alt="Stylist at work"
+              />
+            </div>
           </FadeIn>
         </div>
-      </div>
+        <div className="w-full md:w-1/2 md:pt-16 flex flex-col gap-8">
+          <FadeIn delay={0.4}>
+            <h3 className="font-sans text-brand-gold uppercase tracking-widest text-xs mb-2">
+              Heritage
+            </h3>
+            <p className="text-brand-cream/80 font-sans font-light leading-relaxed text-lg">
+              Established in 2026, RuuAURA was born from a desire to redefine the
+              modern salon experience. We moved away from the chaotic, fast-paced
+              environment to create a sanctuary where time slows down.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.5}>
+            <h3 className="font-sans text-brand-gold uppercase tracking-widest text-xs mb-2 mt-2">
+              Expertise
+            </h3>
+            <p className="text-brand-cream/80 font-sans font-light leading-relaxed text-lg mb-6">
+              Our team consists of internationally trained artisans who view
+              their work as a form of art. Utilizing only premium, ethically
+              sourced products, we ensure every treatment is an indulgence.
+            </p>
 
-      <div className="p-8 md:p-14 bg-brand-surface border border-brand-border text-center">
-        <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold block mb-2">
-          RESERVE YOUR BESPOKE VISIT
-        </span>
-        <h3 className="text-2xl md:text-4xl font-serif text-brand-cream mb-6">
-          Begin Your Radiance Journey
-        </h3>
-        <button
-          onClick={() => setRoute("booking")}
-          className="bg-brand-gold hover:bg-white text-brand-black px-8 py-3.5 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all inline-flex items-center gap-2"
-        >
-          <span>Book Consultation</span>
-          <Icons.ArrowRight />
-        </button>
-      </div>
-    </motion.div>
-  );
-};
-
-// ==========================================
-// SERVICES & CURATIONS PAGE
-// ==========================================
-const ServicesPage = ({ setRoute, onSelectServiceForBooking }) => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [activeServiceModal, setActiveServiceModal] = useState(null);
-
-  const categories = [
-    { id: "all", label: "All Curations" },
-    { id: "hair", label: "Hair Architecture" },
-    { id: "spa", label: "Skin & Botanical Spa" },
-    { id: "bridal", label: "Bridal & Editorial" },
-    { id: "nails", label: "Nail Artistry" },
-  ];
-
-  const filteredServices = useMemo(() => {
-    if (selectedCategory === "all") return DEFAULT_SERVICES;
-    return DEFAULT_SERVICES.filter((s) => s.category === selectedCategory);
-  }, [selectedCategory]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="pt-32 pb-24 md:pt-44 md:pb-36 px-6 md:px-12 container mx-auto min-h-screen"
-    >
-      <div className="max-w-3xl mb-12">
-        <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold block mb-2">
-          CURATED SERVICE MENU
-        </span>
-        <h1 className="text-4xl md:text-6xl font-serif text-brand-cream mb-4">
-          Haute Rituals & <span className="italic text-brand-gold">Treatments.</span>
-        </h1>
-        <p className="text-sm md:text-base font-sans text-brand-cream/70 font-light">
-          Discover tailored treatments developed by our master artisans with the
-          world's most refined botanical formulas.
-        </p>
-      </div>
-
-      {/* Category Tabs */}
-      <div className="flex flex-wrap gap-2 md:gap-3 mb-12 border-b border-brand-border pb-6">
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => setSelectedCategory(cat.id)}
-            className={`px-5 py-2.5 text-xs font-sans tracking-[0.15em] uppercase transition-all duration-300 ${
-              selectedCategory === cat.id
-                ? "bg-brand-gold text-brand-black font-semibold"
-                : "bg-brand-surface text-brand-cream/70 hover:text-white hover:bg-brand-card border border-brand-border"
-            }`}
-          >
-            {cat.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-        {filteredServices.map((service, idx) => (
-          <FadeIn
-            key={service.id}
-            delay={0.1 * idx}
-            className="bg-brand-surface border border-brand-border p-6 md:p-8 flex flex-col justify-between group hover:border-brand-gold/60 transition-all duration-300"
-          >
-            <div>
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <span className="text-[10px] font-sans tracking-[0.25em] uppercase text-brand-gold block mb-1">
-                    {service.tag}
-                  </span>
-                  <h3 className="text-2xl font-serif text-brand-cream group-hover:text-brand-gold transition-colors">
-                    {service.title}
-                  </h3>
-                </div>
-                <span className="text-lg font-serif text-brand-gold font-semibold">
-                  {service.price}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3 text-xs font-sans text-brand-muted mb-4">
-                <span className="flex items-center gap-1">
-                  <Icons.Clock /> {service.duration}
-                </span>
-                <span>•</span>
-                <span className="uppercase text-[10px] tracking-widest">
-                  {service.category}
-                </span>
-              </div>
-
-              <p className="text-sm font-sans text-brand-cream/75 font-light leading-relaxed mb-6">
-                {service.desc}
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between border-t border-brand-border pt-4">
+            <div className="flex flex-wrap gap-4 pt-4 border-t border-white/10">
               <button
-                onClick={() => setActiveServiceModal(service)}
-                className="text-xs font-sans tracking-wider uppercase text-brand-muted hover:text-white transition-colors"
+                onClick={() => {
+                  setRoute("services");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="bg-brand-gold text-brand-black px-6 py-3 text-xs tracking-[0.2em] uppercase font-semibold hover:bg-white transition-colors duration-300"
               >
-                View Products & Details
+                Explore Curations
               </button>
               <button
                 onClick={() => {
-                  if (onSelectServiceForBooking)
-                    onSelectServiceForBooking(service);
-                  setRoute("booking");
+                  setRoute("team");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="bg-brand-gold hover:bg-white text-brand-black px-6 py-2.5 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all flex items-center gap-1.5"
+                className="border border-white/20 px-6 py-3 text-xs tracking-[0.2em] uppercase font-semibold text-brand-cream hover:border-brand-gold hover:text-brand-gold transition-colors duration-300"
               >
-                <span>Book Now</span>
-                <Icons.ArrowRight />
+                Meet The Artisans
               </button>
             </div>
           </FadeIn>
-        ))}
-      </div>
-
-      {/* Quick View Modal */}
-      <AnimatePresence>
-        {activeServiceModal && (
-          <ServiceModal
-            service={activeServiceModal}
-            onClose={() => setActiveServiceModal(null)}
-            onBook={(service) => {
-              if (onSelectServiceForBooking) onSelectServiceForBooking(service);
-              setRoute("booking");
-            }}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
-
-// ==========================================
-// TEAM / ARTISANS PAGE
-// ==========================================
-const TeamPage = ({ setRoute, onSelectArtisanForBooking }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="pt-32 pb-24 md:pt-44 md:pb-36 px-6 md:px-12 container mx-auto min-h-screen"
-    >
-      <div className="max-w-3xl mb-16">
-        <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold block mb-2">
-          INTERNATIONAL MASTERS
-        </span>
-        <h1 className="text-4xl md:text-6xl font-serif text-brand-cream mb-4">
-          The <span className="italic text-brand-gold">Artisans.</span>
-        </h1>
-        <p className="text-sm md:text-base font-sans text-brand-cream/70 font-light leading-relaxed">
-          Each master practitioner brings a rich heritage of editorial work,
-          global academy training, and refined aesthetic mastery.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {ARTISANS.map((artisan, idx) => (
-          <FadeIn
-            key={artisan.id}
-            delay={0.15 * idx}
-            className="bg-brand-surface border border-brand-border p-6 flex flex-col justify-between group hover:border-brand-gold/60 transition-all duration-300"
-          >
-            <div>
-              <div className="aspect-[3/4] overflow-hidden bg-brand-dark mb-6">
-                <img
-                  src={artisan.img}
-                  alt={artisan.name}
-                  className="w-full h-full object-cover grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                />
-              </div>
-              <div className="flex justify-between items-center mb-1">
-                <h3 className="text-2xl font-serif text-brand-cream group-hover:text-brand-gold transition-colors">
-                  {artisan.name}
-                </h3>
-                <span className="text-xs font-sans text-brand-gold">
-                  {artisan.rating}
-                </span>
-              </div>
-              <p className="text-[10px] font-sans tracking-[0.2em] uppercase text-brand-gold mb-3">
-                {artisan.role}
-              </p>
-              <p className="text-xs font-sans text-brand-cream/70 font-light mb-2">
-                <strong>Specialty:</strong> {artisan.specialty}
-              </p>
-              <p className="text-xs font-sans text-brand-muted font-light mb-6">
-                {artisan.exp}
-              </p>
-            </div>
-
-            <button
-              onClick={() => {
-                if (onSelectArtisanForBooking)
-                  onSelectArtisanForBooking(artisan);
-                setRoute("booking");
-              }}
-              className="w-full border border-brand-border hover:border-brand-gold text-brand-cream hover:text-brand-gold py-2.5 text-xs font-sans tracking-[0.2em] uppercase font-medium transition-all text-center"
-            >
-              Book With {artisan.name.split(" ")[0]}
-            </button>
-          </FadeIn>
-        ))}
-      </div>
-    </motion.div>
-  );
-};
-
-// ==========================================
-// LOCATION & MAP PAGE
-// ==========================================
-const LocationPage = ({ setRoute, showToast }) => {
-  const [viewMode, setViewMode] = useState("map");
-
-  const copyAddress = () => {
-    navigator.clipboard?.writeText("142 Ward Place, Colombo 07, Sri Lanka");
-    showToast("Address copied to clipboard!", "info");
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="pt-32 pb-24 md:pt-44 md:pb-36 px-6 md:px-12 container mx-auto min-h-screen"
-    >
-      <div className="max-w-3xl mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-success/15 border border-brand-success/40 text-brand-success text-xs font-sans font-medium uppercase tracking-wider mb-3">
-          <span className="w-2 h-2 rounded-full bg-brand-success animate-pulse" />
-          <span>Open Today: 10:00 AM – 08:00 PM</span>
-        </div>
-        <h1 className="text-4xl md:text-6xl font-serif text-brand-cream mb-4">
-          Studio & <span className="italic text-brand-gold">Location.</span>
-        </h1>
-        <p className="text-sm md:text-base font-sans text-brand-cream/70 font-light">
-          Nestled in the tranquil leafy enclave of Ward Place, Cinnamon Gardens,
-          RuuAURA offers valet parking and private treatment suites.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-        {/* Location Details Card */}
-        <div className="lg:col-span-5 bg-brand-surface border border-brand-border p-8 flex flex-col gap-6">
-          <div>
-            <span className="text-[10px] font-sans tracking-[0.3em] uppercase text-brand-gold block mb-1">
-              THE ADDRESS
-            </span>
-            <h3 className="text-2xl font-serif text-brand-cream mb-2">
-              Ward Place Sanctuary
-            </h3>
-            <p className="text-sm font-sans text-brand-cream/80 font-light leading-relaxed">
-              142 Ward Place, Cinnamon Gardens
-              <br />
-              Colombo 07, 00700, Sri Lanka
-            </p>
-            <button
-              onClick={copyAddress}
-              className="mt-3 text-xs font-sans text-brand-gold hover:underline tracking-wider uppercase flex items-center gap-1.5"
-            >
-              <span>Copy Address Details</span>
-            </button>
-          </div>
-
-          <div className="border-t border-brand-border pt-6">
-            <span className="text-[10px] font-sans tracking-[0.3em] uppercase text-brand-gold block mb-2">
-              OPENING HOURS
-            </span>
-            <div className="space-y-2 text-xs font-sans text-brand-cream/70">
-              <div className="flex justify-between py-1 border-b border-brand-border/40">
-                <span>Tuesday – Friday</span>
-                <span className="text-brand-cream font-medium">
-                  10:00 AM – 08:00 PM
-                </span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-brand-border/40">
-                <span>Saturday & Sunday</span>
-                <span className="text-brand-cream font-medium">
-                  09:00 AM – 07:00 PM
-                </span>
-              </div>
-              <div className="flex justify-between py-1 text-brand-muted">
-                <span>Monday</span>
-                <span>Reserved for Private Editorial</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-brand-border pt-6">
-            <span className="text-[10px] font-sans tracking-[0.3em] uppercase text-brand-gold block mb-2">
-              CONCIERGE & BOOKING
-            </span>
-            <p className="text-xs font-sans text-brand-cream/80 mb-1">
-              Direct Desk:{" "}
-              <strong className="text-brand-cream">+94 11 268 9400</strong>
-            </p>
-            <p className="text-xs font-sans text-brand-cream/80">
-              Email:{" "}
-              <strong className="text-brand-cream">concierge@ruuaura.lk</strong>
-            </p>
-          </div>
-
-          <button
-            onClick={() => setRoute("booking")}
-            className="w-full bg-brand-gold hover:bg-white text-brand-black py-3.5 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all text-center mt-2"
-          >
-            Reserve a Visit
-          </button>
-        </div>
-
-        {/* Interactive Map Visual Switcher */}
-        <div className="lg:col-span-7 bg-brand-surface border border-brand-border p-6 flex flex-col gap-4">
-          <div className="flex justify-between items-center border-b border-brand-border pb-4">
-            <div className="flex gap-3">
-              <button
-                onClick={() => setViewMode("map")}
-                className={`px-4 py-2 text-xs font-sans tracking-widest uppercase transition-all ${
-                  viewMode === "map"
-                    ? "bg-brand-gold text-brand-black font-semibold"
-                    : "text-brand-muted hover:text-white border border-brand-border"
-                }`}
-              >
-                Map & Directions
-              </button>
-              <button
-                onClick={() => setViewMode("ambience")}
-                className={`px-4 py-2 text-xs font-sans tracking-widest uppercase transition-all ${
-                  viewMode === "ambience"
-                    ? "bg-brand-gold text-brand-black font-semibold"
-                    : "text-brand-muted hover:text-white border border-brand-border"
-                }`}
-              >
-                Studio Ambience
-              </button>
-            </div>
-            <a
-              href="https://maps.google.com/?q=Ward+Place+Colombo+07"
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs font-sans text-brand-gold hover:underline tracking-wider uppercase hidden sm:flex items-center gap-1"
-            >
-              <span>Open Google Maps</span>
-              <Icons.ArrowRight />
-            </a>
-          </div>
-
-          {viewMode === "map" ? (
-            <div className="relative aspect-[16/10] bg-brand-dark overflow-hidden border border-brand-border flex items-center justify-center group">
-              <img
-                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1200&auto=format&fit=crop"
-                alt="Map Aerial View"
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity"
-              />
-              <div className="absolute inset-0 bg-brand-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-14 h-14 rounded-full bg-brand-gold/20 border border-brand-gold flex items-center justify-center text-brand-gold mb-3 animate-bounce">
-                  <Icons.MapPin />
-                </div>
-                <h4 className="text-xl font-serif text-brand-cream mb-1">
-                  RuuAURA Haute Studio
-                </h4>
-                <p className="text-xs font-sans text-brand-cream/80 max-w-sm mb-4">
-                  142 Ward Place, Cinnamon Gardens, Colombo 07
-                </p>
-                <a
-                  href="https://maps.google.com/?q=Ward+Place+Colombo+07"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-brand-gold hover:bg-white text-brand-black px-6 py-2.5 text-xs font-sans tracking-widest uppercase font-bold transition-colors"
-                >
-                  Get Direct Route
-                </a>
-              </div>
-            </div>
-          ) : (
-            <div className="relative aspect-[16/10] bg-brand-dark overflow-hidden border border-brand-border">
-              <img
-                src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop"
-                alt="Studio Interior Ambience"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-4 left-4 bg-brand-black/80 backdrop-blur-md px-4 py-2 text-xs font-sans text-brand-cream border border-brand-border">
-                Private Styling & Scalp Spa Suite 01
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            <div className="p-4 bg-brand-dark border border-brand-border text-center">
-              <span className="text-[10px] font-sans tracking-widest uppercase text-brand-gold block mb-1">
-                VALET PARKING
-              </span>
-              <p className="text-xs font-sans text-brand-cream/80">
-                Complimentary private valet on arrival
-              </p>
-            </div>
-            <div className="p-4 bg-brand-dark border border-brand-border text-center">
-              <span className="text-[10px] font-sans tracking-widest uppercase text-brand-gold block mb-1">
-                AIRPORT / VIP
-              </span>
-              <p className="text-xs font-sans text-brand-cream/80">
-                Chauffeur concierge service upon request
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </motion.div>
@@ -1666,1083 +681,489 @@ const LocationPage = ({ setRoute, showToast }) => {
 };
 
 // ==========================================
-// 5-STEP LUXURY BOOKING ENGINE
+// SERVICES PAGE VIEW
 // ==========================================
-const BookingWizard = ({
-  selectedPreService,
-  selectedPreArtisan,
-  onBookingComplete,
-  showToast,
-  setRoute,
-}) => {
-  const [step, setStep] = useState(1);
-  const [booking, setBooking] = useState({
-    service: selectedPreService || null,
-    artisan: selectedPreArtisan || null,
-    date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
-    time: "11:30 AM",
-    name: "Jane Sterling",
-    email: "jane.sterling@example.com",
-    phone: "+94 77 123 4567",
-    notes: "",
-  });
-
-  const [confirmedBookingId, setConfirmedBookingId] = useState(null);
-
-  const timeSlots = {
-    morning: ["10:00 AM", "11:30 AM"],
-    afternoon: ["01:00 PM", "02:30 PM", "04:00 PM"],
-    evening: ["05:30 PM", "07:00 PM"],
-  };
-
-  const nextStep = () => setStep((prev) => Math.min(prev + 1, 6));
-  const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
-
-  const handleServiceSelect = (service) => {
-    setBooking((prev) => ({ ...prev, service }));
-    nextStep();
-  };
-
-  const handleArtisanSelect = (artisan) => {
-    setBooking((prev) => ({ ...prev, artisan }));
-    nextStep();
-  };
-
-  const handleDateTimeSubmit = (e) => {
-    e.preventDefault();
-    if (booking.date && booking.time) nextStep();
-  };
-
-  const handleDetailsSubmit = (e) => {
-    e.preventDefault();
-    nextStep();
-  };
-
-  const handleFinalConfirmation = () => {
-    const newId = `RA-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    const newRecord = {
-      id: newId,
-      serviceTitle: booking.service?.title || "Custom Treatment",
-      price: booking.service?.price || "$95",
-      duration: booking.service?.duration || "60 Min",
-      artisanName: booking.artisan?.name || "Any Master Artisan",
-      date: booking.date,
-      time: booking.time,
-      clientName: booking.name,
-      clientEmail: booking.email,
-      clientPhone: booking.phone,
-      notes: booking.notes,
-      status: "Confirmed",
-      createdAt: new Date().toISOString().split("T")[0],
-    };
-
-    setConfirmedBookingId(newId);
-    onBookingComplete(newRecord);
-    showToast(`Booking ${newId} confirmed!`, "success");
-    setStep(6);
-  };
-
+const ServicesPage = ({ onSelectService }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="pt-32 pb-24 md:pt-44 md:pb-36 px-6 md:px-12 container mx-auto min-h-screen flex flex-col items-center"
+      transition={{ duration: 0.6 }}
+      className="pt-32 pb-24 md:pt-48 md:pb-40 px-6 md:px-16 container mx-auto min-h-screen"
     >
-      {/* Header */}
-      <div className="text-center max-w-2xl mb-12">
-        <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold block mb-2">
-          RESERVATION CONCIERGE
-        </span>
-        <h1 className="text-4xl md:text-6xl font-serif text-brand-cream">
-          Reserve Your <span className="italic text-brand-gold">Experience.</span>
-        </h1>
+      <div className="max-w-3xl mb-16 md:mb-24">
+        <RevealText>
+          <h1 className="text-5xl md:text-8xl font-serif mb-6">
+            Our <span className="italic text-brand-gold">Curations.</span>
+          </h1>
+        </RevealText>
+        <FadeIn delay={0.3}>
+          <p className="text-brand-cream/70 font-sans font-light text-lg">
+            A bespoke collection of treatments designed to elevate your natural
+            beauty. Click any service to reserve your session.
+          </p>
+        </FadeIn>
       </div>
 
-      {/* Visual Stepper Bar */}
-      {step < 6 && (
-        <div className="w-full max-w-3xl mb-10 flex items-center justify-between border-b border-brand-border pb-6 overflow-x-auto text-xs font-sans uppercase tracking-widest">
-          {[
-            { num: 1, label: "Service" },
-            { num: 2, label: "Artisan" },
-            { num: 3, label: "Schedule" },
-            { num: 4, label: "Details" },
-            { num: 5, label: "Confirm" },
-          ].map((s) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+        {SERVICES.map((service, idx) => (
+          <FadeIn key={idx} delay={0.2 * idx}>
             <div
-              key={s.num}
-              className={`flex items-center gap-2 ${
-                step === s.num
-                  ? "text-brand-gold font-bold"
-                  : step > s.num
-                  ? "text-brand-cream"
-                  : "text-brand-muted/50"
-              }`}
+              className="group cursor-pointer"
+              onClick={() => onSelectService(service)}
             >
-              <span
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] border ${
-                  step === s.num
-                    ? "border-brand-gold bg-brand-gold/10 text-brand-gold"
-                    : step > s.num
-                    ? "border-brand-cream text-brand-cream"
-                    : "border-brand-muted/30 text-brand-muted/50"
-                }`}
-              >
-                {step > s.num ? "✓" : s.num}
-              </span>
-              <span className="hidden sm:inline">{s.label}</span>
+              <div className="img-zoom-container w-full h-80 md:h-[400px] mb-6 overflow-hidden relative">
+                <img
+                  src={service.img}
+                  alt={service.title}
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                />
+                <div className="absolute bottom-4 right-4 bg-brand-black/90 text-brand-gold px-4 py-2 text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm border border-brand-gold/30">
+                  Select & Reserve →
+                </div>
+              </div>
+              <div className="flex justify-between items-end border-b border-white/10 pb-4 group-hover:border-brand-gold transition-colors duration-500">
+                <div>
+                  <h3 className="text-2xl font-serif mb-2 group-hover:text-brand-gold transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-sm font-sans text-brand-cream/60 font-light">
+                    {service.desc}
+                  </p>
+                </div>
+                <div className="text-brand-gold font-sans tracking-wider text-sm whitespace-nowrap ml-4">
+                  {service.price}
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+          </FadeIn>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
 
-      {/* Main Wizard Container */}
-      <div className="w-full max-w-3xl bg-brand-surface border border-brand-border p-6 md:p-10 shadow-2xl relative">
-        {/* STEP 1: SERVICE */}
-        {step === 1 && (
-          <FadeIn>
-            <div className="flex justify-between items-center border-b border-brand-border pb-4 mb-6">
-              <h3 className="text-xl font-serif text-brand-cream">
-                1. Select Desired Treatment
-              </h3>
-              <span className="text-xs font-sans text-brand-muted">Step 1 of 5</span>
+// ==========================================
+// TEAM PAGE VIEW
+// ==========================================
+const TeamPage = ({ onBook }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+      className="pt-32 pb-24 md:pt-48 md:pb-40 px-6 md:px-16 container mx-auto min-h-screen"
+    >
+      <div className="max-w-3xl mb-16 md:mb-24">
+        <RevealText>
+          <h1 className="text-5xl md:text-8xl font-serif mb-6">
+            Our <span className="italic text-brand-gold">Artisans.</span>
+          </h1>
+        </RevealText>
+        <FadeIn delay={0.3}>
+          <p className="text-brand-cream/70 font-sans font-light text-lg leading-relaxed">
+            Meet the visionaries behind Aura. A collective of internationally
+            acclaimed stylists and wellness experts dedicated to perfecting your
+            aesthetic.
+          </p>
+        </FadeIn>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {TEAM_MEMBERS.map((member, idx) => (
+          <FadeIn key={idx} delay={0.2 * idx}>
+            <div
+              className="group cursor-pointer"
+              onClick={onBook}
+            >
+              <div className="w-full aspect-[3/4] overflow-hidden mb-6 bg-brand-dark relative">
+                <img
+                  src={member.img}
+                  alt={member.name}
+                  className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                  <span className="text-xs uppercase tracking-widest text-brand-gold">
+                    Book with {member.name.split(" ")[0]} →
+                  </span>
+                </div>
+              </div>
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-serif text-brand-cream mb-1">
+                  {member.name}
+                </h3>
+                <p className="text-xs font-sans tracking-[0.15em] uppercase text-brand-gold">
+                  {member.role}
+                </p>
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {DEFAULT_SERVICES.map((s) => (
+          </FadeIn>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+// ==========================================
+// BOOKING PAGE VIEW
+// ==========================================
+const BookingPage = ({ preSelectedService }) => {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedService, setSelectedService] = useState(
+    preSelectedService?.title || ""
+  );
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const timeSlots = [
+    "10:00 AM",
+    "11:30 AM",
+    "01:00 PM",
+    "03:30 PM",
+    "05:00 PM",
+  ];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!selectedTime) {
+      alert("Please select an arrival time slot.");
+      return;
+    }
+    setIsSubmitted(true);
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setSelectedDate("");
+      setSelectedTime("");
+      e.target.reset();
+    }, 3500);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+      className="pt-32 pb-24 md:pt-48 md:pb-40 px-6 md:px-16 container mx-auto min-h-screen flex flex-col lg:flex-row gap-16 lg:gap-24"
+    >
+      {/* Left Column: Info & Location */}
+      <div className="w-full lg:w-5/12 flex flex-col">
+        <RevealText>
+          <h1 className="text-5xl md:text-7xl font-serif mb-6">
+            Reserve <br />
+            <span className="italic text-brand-gold">Your Time.</span>
+          </h1>
+        </RevealText>
+        <FadeIn delay={0.3}>
+          <p className="text-brand-cream/70 font-sans font-light text-base mb-12">
+            Secure your private session with our experts. Walk-ins are subject to
+            availability, so we highly recommend booking in advance.
+          </p>
+        </FadeIn>
+
+        <FadeIn delay={0.4} className="flex flex-col gap-10 border-t border-white/10 pt-10">
+          {/* Availability Section */}
+          <div>
+            <h4 className="text-brand-gold uppercase text-xs tracking-widest mb-6 flex items-center gap-2">
+              <CalendarIcon /> Availability
+            </h4>
+            <div className="flex flex-col gap-3 text-sm font-sans font-light">
+              {AVAILABILITY.map((schedule, i) => (
                 <div
-                  key={s.id}
-                  onClick={() => handleServiceSelect(s)}
-                  className={`border p-5 cursor-pointer transition-all duration-300 flex justify-between items-center group ${
-                    booking.service?.id === s.id
-                      ? "border-brand-gold bg-brand-dark shadow-md"
-                      : "border-brand-border bg-brand-dark/50 hover:border-brand-gold/60"
-                  }`}
+                  key={i}
+                  className="flex justify-between items-center text-brand-cream/90"
                 >
-                  <div>
-                    <span className="text-[9px] font-sans uppercase tracking-widest text-brand-gold block">
-                      {s.category}
-                    </span>
-                    <h4 className="font-serif text-lg text-brand-cream group-hover:text-brand-gold transition-colors">
-                      {s.title}
-                    </h4>
-                    <p className="text-[10px] uppercase font-sans tracking-widest text-brand-muted mt-1">
-                      {s.duration}
-                    </p>
-                  </div>
-                  <span className="text-sm font-serif text-brand-gold font-semibold">
-                    {s.price}
+                  <span>{schedule.day}</span>
+                  <span
+                    className={
+                      schedule.hours.includes("Closed")
+                        ? "text-brand-muted"
+                        : "text-white"
+                    }
+                  >
+                    {schedule.hours}
                   </span>
                 </div>
               ))}
             </div>
-          </FadeIn>
-        )}
+          </div>
 
-        {/* STEP 2: ARTISAN */}
-        {step === 2 && (
-          <FadeIn>
-            <div className="flex justify-between items-center border-b border-brand-border pb-4 mb-6">
-              <div>
-                <h3 className="text-xl font-serif text-brand-cream">
-                  2. Choose Your Master Artisan
-                </h3>
-                <p className="text-xs font-sans text-brand-muted mt-0.5">
-                  Selected: {booking.service?.title}
-                </p>
-              </div>
-              <button
-                onClick={prevStep}
-                className="text-xs font-sans tracking-widest uppercase text-brand-muted hover:text-white"
-              >
-                ← Back
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <div
-                onClick={() =>
-                  handleArtisanSelect({ name: "Any Available Master Artisan" })
-                }
-                className={`border p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
-                  !booking.artisan || booking.artisan.name.includes("Any")
-                    ? "border-brand-gold bg-brand-dark"
-                    : "border-brand-border bg-brand-dark/50 hover:border-brand-gold/60"
-                }`}
-              >
-                <div className="w-12 h-12 rounded-full border border-brand-gold/40 flex items-center justify-center text-brand-gold mb-3">
-                  <Icons.Sparkle />
+          {/* Location Section */}
+          <div>
+            <h4 className="text-brand-gold uppercase text-xs tracking-widest mb-6 mt-4">
+              Location & Contact
+            </h4>
+            <p className="text-brand-cream/90 text-base font-light mb-4">
+              142 Ward Place, Colombo 07
+              <br />
+              Western Province, Sri Lanka
+            </p>
+            <p className="text-brand-cream/90 text-base font-light mb-6">
+              +94 77 123 4567
+              <br />
+              info@aurabeauty.lk
+            </p>
+            {/* Simulated Map Box */}
+            <div className="w-full h-48 bg-brand-dark overflow-hidden relative group">
+              <img
+                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1000&auto=format&fit=crop"
+                alt="Map View"
+                className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-500"
+              />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="bg-brand-black/80 px-4 py-2 text-xs uppercase tracking-widest text-brand-gold font-sans backdrop-blur-sm border border-brand-gold/30">
+                  View on Maps
                 </div>
-                <h4 className="font-serif text-base text-brand-cream">
-                  No Preference
-                </h4>
-                <p className="text-[10px] font-sans text-brand-muted uppercase tracking-widest mt-1">
-                  First available specialist
-                </p>
               </div>
+            </div>
+          </div>
+        </FadeIn>
+      </div>
 
-              {ARTISANS.map((a) => (
-                <div
-                  key={a.id}
-                  onClick={() => handleArtisanSelect(a)}
-                  className={`border p-4 text-center cursor-pointer transition-all group ${
-                    booking.artisan?.id === a.id
-                      ? "border-brand-gold bg-brand-dark"
-                      : "border-brand-border bg-brand-dark/50 hover:border-brand-gold/60"
-                  }`}
+      {/* Right Column: Booking Form */}
+      <div className="w-full lg:w-7/12 lg:pt-4">
+        <FadeIn delay={0.5}>
+          <div className="bg-brand-dark p-8 md:p-12 border border-white/5 relative overflow-hidden">
+            {/* Success Message Overlay */}
+            <AnimatePresence>
+              {isSubmitted && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 bg-brand-dark z-20 flex flex-col items-center justify-center text-center p-8"
                 >
-                  <img
-                    src={a.img}
-                    alt={a.name}
-                    className="w-20 h-20 rounded-full mx-auto object-cover grayscale group-hover:grayscale-0 transition-all mb-3 border border-brand-border"
-                  />
-                  <h4 className="font-serif text-base text-brand-cream group-hover:text-brand-gold transition-colors">
-                    {a.name}
-                  </h4>
-                  <p className="text-[10px] font-sans uppercase tracking-widest text-brand-gold mt-0.5">
-                    {a.role.split("&")[0]}
+                  <div className="w-16 h-16 rounded-full border border-brand-gold flex items-center justify-center text-brand-gold mb-6 text-2xl">
+                    ✓
+                  </div>
+                  <h3 className="text-2xl font-serif text-brand-cream mb-2">
+                    Booking Confirmed
+                  </h3>
+                  <p className="text-brand-cream/70 font-sans font-light">
+                    We have received your request and will contact you shortly.
                   </p>
-                  <p className="text-[10px] text-brand-muted mt-1">{a.rating}</p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        )}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-        {/* STEP 3: DATE & TIME */}
-        {step === 3 && (
-          <FadeIn>
-            <div className="flex justify-between items-center border-b border-brand-border pb-4 mb-6">
-              <div>
-                <h3 className="text-xl font-serif text-brand-cream">
-                  3. Select Date & Arrival Time
-                </h3>
-                <p className="text-xs font-sans text-brand-muted mt-0.5">
-                  Artisan: {booking.artisan?.name || "Any Available"}
-                </p>
-              </div>
-              <button
-                onClick={prevStep}
-                className="text-xs font-sans tracking-widest uppercase text-brand-muted hover:text-white"
-              >
-                ← Back
-              </button>
-            </div>
-
-            <form onSubmit={handleDateTimeSubmit} className="space-y-6">
-              <div>
-                <label className="block text-[10px] font-sans uppercase tracking-widest text-brand-muted mb-2">
-                  Select Date
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={booking.date}
-                  onChange={(e) =>
-                    setBooking({ ...booking, date: e.target.value })
-                  }
-                  className="w-full bg-brand-dark border border-brand-border px-4 py-3 text-brand-cream focus:outline-none focus:border-brand-gold transition-colors font-sans [color-scheme:dark]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-sans uppercase tracking-widest text-brand-muted mb-3">
-                  Available Time Slots
-                </label>
-
-                <div className="space-y-4">
-                  <div>
-                    <span className="text-[10px] font-sans tracking-wider uppercase text-brand-gold/80 block mb-2">
-                      Morning Slots
-                    </span>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {timeSlots.morning.map((time) => (
-                        <button
-                          key={time}
-                          type="button"
-                          onClick={() => setBooking({ ...booking, time })}
-                          className={`py-2.5 px-3 text-xs font-sans tracking-wider uppercase border transition-all ${
-                            booking.time === time
-                              ? "bg-brand-gold text-brand-black border-brand-gold font-bold shadow-md"
-                              : "border-brand-border bg-brand-dark text-brand-cream/80 hover:border-brand-gold/50"
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <span className="text-[10px] font-sans tracking-wider uppercase text-brand-gold/80 block mb-2">
-                      Afternoon Slots
-                    </span>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {timeSlots.afternoon.map((time) => (
-                        <button
-                          key={time}
-                          type="button"
-                          onClick={() => setBooking({ ...booking, time })}
-                          className={`py-2.5 px-3 text-xs font-sans tracking-wider uppercase border transition-all ${
-                            booking.time === time
-                              ? "bg-brand-gold text-brand-black border-brand-gold font-bold shadow-md"
-                              : "border-brand-border bg-brand-dark text-brand-cream/80 hover:border-brand-gold/50"
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <span className="text-[10px] font-sans tracking-wider uppercase text-brand-gold/80 block mb-2">
-                      Evening Slots
-                    </span>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {timeSlots.evening.map((time) => (
-                        <button
-                          key={time}
-                          type="button"
-                          onClick={() => setBooking({ ...booking, time })}
-                          className={`py-2.5 px-3 text-xs font-sans tracking-wider uppercase border transition-all ${
-                            booking.time === time
-                              ? "bg-brand-gold text-brand-black border-brand-gold font-bold shadow-md"
-                              : "border-brand-border bg-brand-dark text-brand-cream/80 hover:border-brand-gold/50"
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 flex justify-end">
-                <button
-                  type="submit"
-                  className="bg-brand-gold hover:bg-white text-brand-black px-8 py-3.5 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all"
-                >
-                  Continue to Details
-                </button>
-              </div>
-            </form>
-          </FadeIn>
-        )}
-
-        {/* STEP 4: CLIENT DETAILS */}
-        {step === 4 && (
-          <FadeIn>
-            <div className="flex justify-between items-center border-b border-brand-border pb-4 mb-6">
-              <h3 className="text-xl font-serif text-brand-cream">
-                4. Guest Information
-              </h3>
-              <button
-                onClick={prevStep}
-                className="text-xs font-sans tracking-widest uppercase text-brand-muted hover:text-white"
-              >
-                ← Back
-              </button>
-            </div>
-
-            <form onSubmit={handleDetailsSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <h3 className="text-2xl font-serif text-brand-cream mb-8">
+              Appointment Details
+            </h3>
+            <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[10px] font-sans uppercase tracking-widest text-brand-muted mb-1.5">
+                  <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
                     Full Name
                   </label>
                   <input
-                    type="text"
                     required
-                    value={booking.name}
-                    onChange={(e) =>
-                      setBooking({ ...booking, name: e.target.value })
-                    }
-                    className="w-full bg-brand-dark border border-brand-border px-4 py-2.5 text-brand-cream focus:outline-none focus:border-brand-gold font-sans text-sm"
+                    type="text"
+                    placeholder="Jane Doe"
+                    className="w-full bg-transparent border-b border-white/20 py-2 text-brand-cream placeholder-brand-muted/30 focus:outline-none focus:border-brand-gold transition-colors font-sans text-base"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-sans uppercase tracking-widest text-brand-muted mb-1.5">
-                    Email Address (For Confirmation)
+                  <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                    Phone Number
                   </label>
                   <input
-                    type="email"
                     required
-                    value={booking.email}
-                    onChange={(e) =>
-                      setBooking({ ...booking, email: e.target.value })
-                    }
-                    className="w-full bg-brand-dark border border-brand-border px-4 py-2.5 text-brand-cream focus:outline-none focus:border-brand-gold font-sans text-sm"
+                    type="tel"
+                    placeholder="+94 7X XXX XXXX"
+                    className="w-full bg-transparent border-b border-white/20 py-2 text-brand-cream placeholder-brand-muted/30 focus:outline-none focus:border-brand-gold transition-colors font-sans text-base"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-sans uppercase tracking-widest text-brand-muted mb-1.5">
-                  Phone Number (SMS Alert)
+                <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                  Select Service
                 </label>
-                <input
-                  type="tel"
+                <select
                   required
-                  value={booking.phone}
-                  onChange={(e) =>
-                    setBooking({ ...booking, phone: e.target.value })
-                  }
-                  className="w-full bg-brand-dark border border-brand-border px-4 py-2.5 text-brand-cream focus:outline-none focus:border-brand-gold font-sans text-sm"
-                />
+                  value={selectedService}
+                  onChange={(e) => setSelectedService(e.target.value)}
+                  className="w-full bg-brand-dark border-b border-white/20 py-2 text-brand-cream focus:outline-none focus:border-brand-gold transition-colors font-sans text-base appearance-none rounded-none cursor-pointer"
+                >
+                  <option value="" disabled>
+                    Choose a curation...
+                  </option>
+                  <option value="Signature Haircut">Signature Haircut ($85)</option>
+                  <option value="Balayage & Color">Balayage & Color ($150)</option>
+                  <option value="Spa & Facial">Spa & Facial ($120)</option>
+                  <option value="Bridal Styling">Bridal Styling (Custom)</option>
+                </select>
               </div>
 
               <div>
-                <label className="block text-[10px] font-sans uppercase tracking-widest text-brand-muted mb-1.5">
-                  Bespoke Requests / Allergies / Hair History (Optional)
+                <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-4">
+                  Preferred Date & Time
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Custom date picker */}
+                  <div className="relative">
+                    <input
+                      type="date"
+                      required
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="w-full bg-transparent border-b border-white/20 py-2 text-brand-cream focus:outline-none focus:border-brand-gold transition-colors font-sans text-base cursor-pointer [color-scheme:dark]"
+                    />
+                  </div>
+
+                  {/* Time slots as selectable buttons */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {timeSlots.map((time) => (
+                      <button
+                        type="button"
+                        key={time}
+                        onClick={() => setSelectedTime(time)}
+                        className={`py-2 text-xs font-sans tracking-wider border transition-colors ${
+                          selectedTime === time
+                            ? "bg-brand-gold border-brand-gold text-brand-black font-semibold"
+                            : "border-white/20 text-brand-cream/70 hover:border-brand-gold/50"
+                        }`}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                  Special Requests (Optional)
                 </label>
                 <textarea
-                  rows="3"
-                  value={booking.notes}
-                  onChange={(e) =>
-                    setBooking({ ...booking, notes: e.target.value })
-                  }
-                  placeholder="E.g., Scalp sensitivity, previous bleach treatment..."
-                  className="w-full bg-brand-dark border border-brand-border px-4 py-2.5 text-brand-cream focus:outline-none focus:border-brand-gold font-sans text-sm"
+                  rows="2"
+                  placeholder="Any specific details we should know?"
+                  className="w-full bg-transparent border-b border-white/20 py-2 text-brand-cream placeholder-brand-muted/30 focus:outline-none focus:border-brand-gold transition-colors font-sans text-base resize-none"
                 />
               </div>
 
-              <div className="pt-4 flex justify-end">
-                <button
-                  type="submit"
-                  className="bg-brand-gold hover:bg-white text-brand-black px-8 py-3.5 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all"
-                >
-                  Review Summary
-                </button>
-              </div>
+              <button
+                type="submit"
+                className="mt-4 bg-brand-gold text-brand-black px-8 py-4 text-xs tracking-[0.2em] uppercase font-semibold hover:bg-white transition-colors duration-300 w-full md:w-auto self-start cursor-pointer"
+              >
+                Confirm Booking
+              </button>
             </form>
-          </FadeIn>
-        )}
-
-        {/* STEP 5: FINAL REVIEW */}
-        {step === 5 && (
-          <FadeIn>
-            <div className="flex justify-between items-center border-b border-brand-border pb-4 mb-6">
-              <h3 className="text-xl font-serif text-brand-cream">
-                5. Final Reservation Summary
-              </h3>
-              <button
-                onClick={prevStep}
-                className="text-xs font-sans tracking-widest uppercase text-brand-muted hover:text-white"
-              >
-                ← Back
-              </button>
-            </div>
-
-            <div className="bg-brand-dark border border-brand-border p-6 space-y-4 mb-8">
-              <div className="flex justify-between items-start border-b border-brand-border pb-3">
-                <div>
-                  <span className="text-[10px] font-sans uppercase tracking-widest text-brand-gold block">
-                    TREATMENT
-                  </span>
-                  <h4 className="font-serif text-lg text-brand-cream">
-                    {booking.service?.title}
-                  </h4>
-                  <p className="text-xs text-brand-muted font-sans">
-                    {booking.service?.duration}
-                  </p>
-                </div>
-                <span className="text-xl font-serif text-brand-gold font-semibold">
-                  {booking.service?.price}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans text-brand-cream/80">
-                <div>
-                  <span className="text-[10px] uppercase tracking-widest text-brand-muted block mb-0.5">
-                    ARTISAN
-                  </span>
-                  <p className="text-brand-cream font-medium">
-                    {booking.artisan?.name || "Any Master Artisan"}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase tracking-widest text-brand-muted block mb-0.5">
-                    DATE & TIME
-                  </span>
-                  <p className="text-brand-cream font-medium">
-                    {booking.date} at {booking.time}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase tracking-widest text-brand-muted block mb-0.5">
-                    GUEST
-                  </span>
-                  <p className="text-brand-cream font-medium">{booking.name}</p>
-                  <p className="text-brand-muted">
-                    {booking.email} • {booking.phone}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase tracking-widest text-brand-muted block mb-0.5">
-                    LOCATION
-                  </span>
-                  <p className="text-brand-cream font-medium">
-                    142 Ward Place, Colombo 07
-                  </p>
-                </div>
-              </div>
-
-              {booking.notes && (
-                <div className="border-t border-brand-border pt-3">
-                  <span className="text-[10px] uppercase tracking-widest text-brand-muted block mb-0.5">
-                    SPECIAL REQUESTS
-                  </span>
-                  <p className="text-xs italic text-brand-cream/70 font-sans font-light">
-                    {booking.notes}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={handleFinalConfirmation}
-              className="w-full bg-brand-gold hover:bg-white text-brand-black py-4 text-xs font-sans tracking-[0.25em] uppercase font-bold transition-all shadow-xl"
-            >
-              Confirm Reservation
-            </button>
-          </FadeIn>
-        )}
-
-        {/* STEP 6: CONFIRMATION RECEIPT PASS */}
-        {step === 6 && (
-          <FadeIn className="text-center py-6">
-            <div className="w-16 h-16 rounded-full bg-brand-gold/15 border border-brand-gold flex items-center justify-center text-brand-gold mx-auto mb-6">
-              <Icons.CheckCircle />
-            </div>
-            <h3 className="text-3xl font-serif text-brand-cream mb-2">
-              Reservation Confirmed
-            </h3>
-            <p className="text-xs font-sans uppercase tracking-[0.25em] text-brand-gold font-medium mb-6">
-              REFERENCE: {confirmedBookingId}
-            </p>
-
-            <div className="bg-brand-dark border border-brand-border p-6 max-w-md mx-auto text-left mb-8 space-y-2 text-xs font-sans">
-              <p className="text-brand-cream/80">
-                <strong>Service:</strong> {booking.service?.title}
-              </p>
-              <p className="text-brand-cream/80">
-                <strong>Artisan:</strong>{" "}
-                {booking.artisan?.name || "Master Specialist"}
-              </p>
-              <p className="text-brand-cream/80">
-                <strong>Schedule:</strong> {booking.date} at {booking.time}
-              </p>
-              <p className="text-brand-cream/80">
-                <strong>Guest:</strong> {booking.name}
-              </p>
-              <p className="text-brand-muted text-[11px] pt-2 border-t border-brand-border">
-                A confirmation email and digital entry pass has been dispatched to{" "}
-                {booking.email}.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button
-                onClick={() => setRoute("account")}
-                className="bg-brand-gold hover:bg-white text-brand-black px-6 py-3 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all"
-              >
-                View in My AURA Portal
-              </button>
-              <button
-                onClick={() => setRoute("home")}
-                className="border border-brand-border hover:border-brand-gold text-brand-cream px-6 py-3 text-xs font-sans tracking-[0.2em] uppercase font-medium transition-all"
-              >
-                Return to Sanctuary
-              </button>
-            </div>
-          </FadeIn>
-        )}
+          </div>
+        </FadeIn>
       </div>
     </motion.div>
   );
 };
 
 // ==========================================
-// CUSTOMER PORTAL (My AURA & VIP Pass)
-// ==========================================
-const CustomerDashboard = ({
-  bookings,
-  onCancelBooking,
-  setRoute,
-  showToast,
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="pt-32 pb-24 md:pt-44 md:pb-36 px-6 md:px-12 container mx-auto min-h-screen"
-    >
-      <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-brand-border pb-6 mb-10 gap-4">
-          <div>
-            <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold block mb-1">
-              CLIENT PRIVILEGE PORTAL
-            </span>
-            <h1 className="text-3xl md:text-5xl font-serif text-brand-cream">
-              Welcome, <span className="italic text-brand-gold">Jane Sterling.</span>
-            </h1>
-          </div>
-          <button
-            onClick={() => setRoute("booking")}
-            className="bg-brand-gold hover:bg-white text-brand-black px-6 py-2.5 text-xs font-sans tracking-[0.2em] uppercase font-bold transition-all"
-          >
-            Book New Treatment
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left: Active Bookings */}
-          <div className="lg:col-span-8 flex flex-col gap-6">
-            <h3 className="text-xs font-sans uppercase tracking-[0.25em] text-brand-gold font-semibold">
-              Your Reservations ({bookings.length})
-            </h3>
-
-            {bookings.length === 0 ? (
-              <div className="bg-brand-surface border border-brand-border p-8 text-center">
-                <p className="text-sm font-sans text-brand-muted mb-4">
-                  You have no scheduled appointments.
-                </p>
-                <button
-                  onClick={() => setRoute("booking")}
-                  className="text-xs font-sans uppercase tracking-widest text-brand-gold border-b border-brand-gold pb-1"
-                >
-                  Reserve a Treatment Now
-                </button>
-              </div>
-            ) : (
-              bookings.map((b) => (
-                <div
-                  key={b.id}
-                  className="bg-brand-surface border border-brand-border p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6"
-                >
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span
-                        className={`px-2.5 py-0.5 text-[10px] font-sans uppercase tracking-widest rounded ${
-                          b.status === "Confirmed"
-                            ? "bg-brand-success/20 text-brand-success border border-brand-success/40"
-                            : b.status === "Pending"
-                            ? "bg-brand-gold/20 text-brand-gold border border-brand-gold/40"
-                            : b.status === "Cancelled"
-                            ? "bg-brand-error/20 text-brand-error border border-brand-error/40"
-                            : "bg-white/10 text-brand-cream border border-white/20"
-                        }`}
-                      >
-                        {b.status}
-                      </span>
-                      <span className="text-[10px] font-sans text-brand-muted tracking-wider">
-                        REF: {b.id}
-                      </span>
-                    </div>
-                    <h4 className="font-serif text-xl text-brand-cream">
-                      {b.serviceTitle}
-                    </h4>
-                    <p className="text-xs font-sans text-brand-muted mt-1">
-                      Artisan:{" "}
-                      <strong className="text-brand-cream/80">
-                        {b.artisanName}
-                      </strong>{" "}
-                      • {b.duration}
-                    </p>
-                  </div>
-
-                  <div className="text-left sm:text-right border-t sm:border-t-0 border-brand-border pt-4 sm:pt-0 w-full sm:w-auto">
-                    <p className="text-sm font-sans font-medium text-brand-cream">
-                      {b.date}
-                    </p>
-                    <p className="text-xs font-sans text-brand-gold mb-3">
-                      {b.time}
-                    </p>
-                    {b.status !== "Cancelled" && (
-                      <button
-                        onClick={() => onCancelBooking(b.id)}
-                        className="text-[10px] font-sans tracking-widest uppercase text-brand-error hover:underline"
-                      >
-                        Cancel Booking
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* Right: VIP Loyalty Card */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
-            <h3 className="text-xs font-sans uppercase tracking-[0.25em] text-brand-gold font-semibold">
-              Privilege Membership
-            </h3>
-
-            <div className="bg-gradient-to-br from-brand-surface via-brand-card to-brand-dark border border-brand-gold/40 p-6 rounded shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/10 rounded-full blur-2xl" />
-              <div className="flex justify-between items-start mb-8 relative z-10">
-                <BrandLogo className="scale-75 origin-top-left" />
-                <span className="text-[10px] font-sans uppercase tracking-widest text-brand-gold bg-brand-gold/10 px-2.5 py-1 border border-brand-gold/30">
-                  BLACK TIER VIP
-                </span>
-              </div>
-
-              <div className="space-y-4 relative z-10">
-                <div>
-                  <span className="text-[9px] font-sans uppercase tracking-widest text-brand-muted block">
-                    MEMBER ID
-                  </span>
-                  <p className="font-mono text-xs text-brand-cream tracking-wider">
-                    AURA-VIP-8942
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[9px] font-sans uppercase tracking-widest text-brand-muted block">
-                    AURA PRIVILEGE POINTS
-                  </span>
-                  <p className="text-2xl font-serif text-brand-gold">
-                    2,450 pts
-                  </p>
-                </div>
-              </div>
-
-              <div className="border-t border-brand-border/60 pt-4 mt-6 text-[10px] font-sans text-brand-muted flex justify-between items-center relative z-10">
-                <span>Complimentary Valet & Champagne</span>
-                <span className="text-brand-cream">Active</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-// ==========================================
-// ADMIN CONCIERGE DASHBOARD
-// ==========================================
-const AdminDashboard = ({
-  bookings,
-  onUpdateStatus,
-  onResetData,
-  showToast,
-}) => {
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredBookings = useMemo(() => {
-    return bookings.filter((b) => {
-      const matchesStatus =
-        filterStatus === "all" ||
-        b.status.toLowerCase() === filterStatus.toLowerCase();
-      const matchesSearch =
-        b.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        b.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        b.serviceTitle.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesStatus && matchesSearch;
-    });
-  }, [bookings, filterStatus, searchQuery]);
-
-  const stats = useMemo(() => {
-    const confirmed = bookings.filter((b) => b.status === "Confirmed").length;
-    const pending = bookings.filter((b) => b.status === "Pending").length;
-    return { total: bookings.length, confirmed, pending };
-  }, [bookings]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="pt-32 pb-24 md:pt-44 md:pb-36 px-6 md:px-12 container mx-auto min-h-screen"
-    >
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-b border-brand-border pb-6 mb-8 gap-4">
-          <div>
-            <span className="text-xs font-sans uppercase tracking-[0.3em] text-brand-gold block mb-1">
-              MANAGEMENT PORTAL
-            </span>
-            <h1 className="text-3xl md:text-5xl font-serif text-brand-cream">
-              Concierge <span className="italic text-brand-gold">Desk.</span>
-            </h1>
-          </div>
-          <button
-            onClick={onResetData}
-            className="text-xs font-sans tracking-widest uppercase text-brand-muted hover:text-white border border-brand-border px-4 py-2"
-          >
-            Reset Demo Data
-          </button>
-        </div>
-
-        {/* Metric Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-          <div className="bg-brand-surface border border-brand-border p-6">
-            <span className="text-[10px] font-sans uppercase tracking-widest text-brand-muted block mb-1">
-              Total Bookings
-            </span>
-            <p className="text-3xl font-serif text-brand-cream">{stats.total}</p>
-          </div>
-          <div className="bg-brand-surface border border-brand-border p-6">
-            <span className="text-[10px] font-sans uppercase tracking-widest text-brand-gold block mb-1">
-              Confirmed
-            </span>
-            <p className="text-3xl font-serif text-brand-gold">
-              {stats.confirmed}
-            </p>
-          </div>
-          <div className="bg-brand-surface border border-brand-border p-6">
-            <span className="text-[10px] font-sans uppercase tracking-widest text-brand-muted block mb-1">
-              Pending Review
-            </span>
-            <p className="text-3xl font-serif text-brand-cream-muted">
-              {stats.pending}
-            </p>
-          </div>
-        </div>
-
-        {/* Filters & Search */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-            {["all", "confirmed", "pending", "cancelled", "completed"].map(
-              (st) => (
-                <button
-                  key={st}
-                  onClick={() => setFilterStatus(st)}
-                  className={`px-4 py-2 text-xs font-sans tracking-wider uppercase transition-all ${
-                    filterStatus === st
-                      ? "bg-brand-gold text-brand-black font-semibold"
-                      : "bg-brand-surface text-brand-cream/70 hover:text-white border border-brand-border"
-                  }`}
-                >
-                  {st}
-                </button>
-              )
-            )}
-          </div>
-          <input
-            type="text"
-            placeholder="Search by guest, ref, or service..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full sm:w-72 bg-brand-surface border border-brand-border px-4 py-2 text-xs font-sans text-brand-cream placeholder-brand-muted focus:outline-none focus:border-brand-gold"
-          />
-        </div>
-
-        {/* Bookings Table */}
-        <div className="bg-brand-surface border border-brand-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs font-sans">
-              <thead>
-                <tr className="border-b border-brand-border bg-brand-dark/50 text-[10px] uppercase tracking-widest text-brand-muted">
-                  <th className="p-4">Reference</th>
-                  <th className="p-4">Guest</th>
-                  <th className="p-4">Treatment</th>
-                  <th className="p-4">Artisan</th>
-                  <th className="p-4">Schedule</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-brand-border">
-                {filteredBookings.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="7"
-                      className="p-8 text-center text-brand-muted font-light"
-                    >
-                      No reservations match your criteria.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredBookings.map((b) => (
-                    <tr
-                      key={b.id}
-                      className="hover:bg-brand-dark/30 transition-colors"
-                    >
-                      <td className="p-4 font-mono text-brand-gold">{b.id}</td>
-                      <td className="p-4">
-                        <p className="font-medium text-brand-cream">
-                          {b.clientName}
-                        </p>
-                        <p className="text-[10px] text-brand-muted">
-                          {b.clientPhone}
-                        </p>
-                      </td>
-                      <td className="p-4">
-                        <p className="text-brand-cream">{b.serviceTitle}</p>
-                        <p className="text-[10px] text-brand-gold">{b.price}</p>
-                      </td>
-                      <td className="p-4 text-brand-cream/80">{b.artisanName}</td>
-                      <td className="p-4">
-                        <p className="text-brand-cream">{b.date}</p>
-                        <p className="text-brand-muted text-[10px]">{b.time}</p>
-                      </td>
-                      <td className="p-4">
-                        <span
-                          className={`px-2.5 py-0.5 text-[10px] uppercase tracking-widest rounded ${
-                            b.status === "Confirmed"
-                              ? "bg-brand-success/20 text-brand-success border border-brand-success/30"
-                              : b.status === "Pending"
-                              ? "bg-brand-gold/20 text-brand-gold border border-brand-gold/30"
-                              : b.status === "Cancelled"
-                              ? "bg-brand-error/20 text-brand-error border border-brand-error/30"
-                              : "bg-white/10 text-brand-cream border border-white/20"
-                          }`}
-                        >
-                          {b.status}
-                        </span>
-                      </td>
-                      <td className="p-4 text-right space-x-2">
-                        {b.status !== "Confirmed" && (
-                          <button
-                            onClick={() => {
-                              onUpdateStatus(b.id, "Confirmed");
-                              showToast(`Booking ${b.id} Approved!`, "success");
-                            }}
-                            className="text-[10px] uppercase tracking-wider text-brand-success hover:underline"
-                          >
-                            Approve
-                          </button>
-                        )}
-                        {b.status !== "Cancelled" && (
-                          <button
-                            onClick={() => {
-                              onUpdateStatus(b.id, "Cancelled");
-                              showToast(`Booking ${b.id} Cancelled.`, "error");
-                            }}
-                            className="text-[10px] uppercase tracking-wider text-brand-error hover:underline"
-                          >
-                            Cancel
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-// ==========================================
-// FOOTER COMPONENT
+// FOOTER
 // ==========================================
 const Footer = ({ setRoute }) => {
   return (
-    <footer className="bg-brand-dark pt-20 pb-12 px-6 md:px-12 border-t border-brand-border">
-      <div className="container mx-auto">
-        <div className="flex flex-col items-center justify-center border-b border-brand-border pb-16 mb-12">
-          <BrandLogo className="scale-125 md:scale-150" />
-          <p className="mt-6 text-xs font-sans text-brand-muted tracking-[0.2em] uppercase text-center max-w-md">
-            The Private Sanctuary of Haute Coiffure & Aesthetic Radiance
-          </p>
-        </div>
+    <footer className="bg-brand-dark pt-24 pb-12 px-6 md:px-16 container mx-auto">
+      <div className="flex flex-col items-center justify-center border-b border-white/10 pb-16 mb-10 text-center">
+        <RevealText>
+          <div
+            onClick={() => {
+              setRoute("home");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="cursor-pointer group select-none flex flex-col items-center"
+          >
+            <h2 className="text-7xl md:text-[10rem] font-serif leading-none tracking-tight text-center text-brand-cream group-hover:text-brand-gold transition-colors duration-500 font-bold">
+              RuuAURA<span className="text-brand-gold">.</span>
+            </h2>
+            <span className="text-xs md:text-sm font-sans tracking-[0.4em] uppercase text-brand-gold font-light mt-2">
+              Beauty Sanctuary
+            </span>
+          </div>
+        </RevealText>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16 text-xs font-sans">
-          <div>
-            <h5 className="text-[10px] uppercase tracking-[0.3em] text-brand-gold font-semibold mb-4">
-              SANCTUARY
-            </h5>
-            <p className="text-brand-cream/70 font-light leading-relaxed">
-              142 Ward Place, Cinnamon Gardens
-              <br />
-              Colombo 07, Sri Lanka
-            </p>
-          </div>
-          <div>
-            <h5 className="text-[10px] uppercase tracking-[0.3em] text-brand-gold font-semibold mb-4">
-              DIRECT CONCIERGE
-            </h5>
-            <p className="text-brand-cream/70 font-light leading-relaxed">
-              Desk: +94 11 268 9400
-              <br />
-              Email: concierge@ruuaura.lk
-            </p>
-          </div>
-          <div>
-            <h5 className="text-[10px] uppercase tracking-[0.3em] text-brand-gold font-semibold mb-4">
-              EXPLORE
-            </h5>
-            <ul className="space-y-2 text-brand-cream/70">
-              <li>
-                <button
-                  onClick={() => setRoute("services")}
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Curated Services
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setRoute("team")}
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Master Artisans
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setRoute("location")}
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Studio Location
-                </button>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h5 className="text-[10px] uppercase tracking-[0.3em] text-brand-gold font-semibold mb-4">
-              CLIENT ACCESS
-            </h5>
-            <ul className="space-y-2 text-brand-cream/70">
-              <li>
-                <button
-                  onClick={() => setRoute("account")}
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  My AURA Portal
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setRoute("admin")}
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Admin Concierge
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setRoute("booking")}
-                  className="hover:text-brand-gold transition-colors"
-                >
-                  Reserve Appointment
-                </button>
-              </li>
-            </ul>
-          </div>
+        {/* Footer Navigation Links */}
+        <div className="flex flex-wrap justify-center gap-6 md:gap-10 mt-12">
+          <button
+            onClick={() => {
+              setRoute("home");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            Home
+          </button>
+          <button
+            onClick={() => {
+              setRoute("about");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            About Us
+          </button>
+          <button
+            onClick={() => {
+              setRoute("services");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            Services
+          </button>
+          <button
+            onClick={() => {
+              setRoute("team");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            The Team
+          </button>
+          <Link
+            href="/login"
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/account"
+            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+          >
+            Account
+          </Link>
+          <button
+            onClick={() => {
+              setRoute("booking");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xs font-sans tracking-widest uppercase text-brand-gold hover:text-white transition-colors font-semibold"
+          >
+            Reserve Session
+          </button>
         </div>
+      </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center text-[10px] font-sans tracking-[0.2em] text-brand-muted uppercase pt-8 border-t border-brand-border/40 gap-4">
-          <p>© 2026 RuuAURA Beauty Studio. All rights reserved.</p>
+      <div className="flex flex-col md:flex-row justify-between items-center text-xs font-sans tracking-widest text-brand-muted uppercase gap-4">
+        <p>© 2026 RuuAURA. All rights reserved.</p>
+        <div className="flex items-center gap-8">
+          <span className="text-brand-cream/60">142 Ward Place, Colombo 07</span>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-brand-gold transition-colors">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-brand-gold transition-colors"
+            >
               Instagram
             </a>
-            <a href="#" className="hover:text-brand-gold transition-colors">
-              Editorial Policies
-            </a>
-            <a href="#" className="hover:text-brand-gold transition-colors">
-              Privacy
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-brand-gold transition-colors"
+            >
+              Facebook
             </a>
           </div>
         </div>
@@ -2752,160 +1173,51 @@ const Footer = ({ setRoute }) => {
 };
 
 // ==========================================
-// ROOT ALL-IN-ONE MASTER COMPONENT
+// MASTER ALL-IN-ONE COMPONENT
 // ==========================================
 export default function AllInOneSanctuary() {
   const [currentRoute, setCurrentRoute] = useState("home");
-  const [selectedPreService, setSelectedPreService] = useState(null);
-  const [selectedPreArtisan, setSelectedPreArtisan] = useState(null);
-  const [toasts, setToasts] = useState([]);
+  const [selectedService, setSelectedService] = useState(null);
 
-  // Load bookings from localStorage with initial seed data
-  const [bookings, setBookings] = useState(SEED_BOOKINGS);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("ruuaura_bookings");
-      if (saved) {
-        setBookings(JSON.parse(saved));
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("ruuaura_bookings", JSON.stringify(bookings));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [bookings]);
-
-  const showToast = (message, type = "info") => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4000);
-  };
-
-  const removeToast = (id) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
-
-  const handleNewBooking = (newRecord) => {
-    setBookings((prev) => [newRecord, ...prev]);
-  };
-
-  const handleCancelBooking = (id) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "Cancelled" } : b))
-    );
-    showToast("Booking cancellation updated.", "info");
-  };
-
-  const handleUpdateStatus = (id, newStatus) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
-    );
-  };
-
-  const handleResetData = () => {
-    setBookings(SEED_BOOKINGS);
-    showToast("Demo data re-initialized.", "info");
+  const handleSelectServiceAndBook = (service) => {
+    setSelectedService(service);
+    setCurrentRoute("booking");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const renderPage = () => {
     switch (currentRoute) {
       case "home":
-        return (
-          <HomePage
-            key="home"
-            setRoute={setCurrentRoute}
-            onSelectServiceForBooking={setSelectedPreService}
-          />
-        );
+        return <HomePage key="home" setRoute={setCurrentRoute} />;
       case "about":
         return <AboutPage key="about" setRoute={setCurrentRoute} />;
       case "services":
         return (
           <ServicesPage
             key="services"
-            setRoute={setCurrentRoute}
-            onSelectServiceForBooking={setSelectedPreService}
+            onSelectService={handleSelectServiceAndBook}
           />
         );
       case "team":
-        return (
-          <TeamPage
-            key="team"
-            setRoute={setCurrentRoute}
-            onSelectArtisanForBooking={setSelectedPreArtisan}
-          />
-        );
-      case "location":
-        return (
-          <LocationPage
-            key="location"
-            setRoute={setCurrentRoute}
-            showToast={showToast}
-          />
-        );
+        return <TeamPage key="team" onBook={() => setCurrentRoute("booking")} />;
       case "booking":
         return (
-          <BookingWizard
+          <BookingPage
             key="booking"
-            selectedPreService={selectedPreService}
-            selectedPreArtisan={selectedPreArtisan}
-            onBookingComplete={handleNewBooking}
-            showToast={showToast}
-            setRoute={setCurrentRoute}
-          />
-        );
-      case "account":
-        return (
-          <CustomerDashboard
-            key="account"
-            bookings={bookings}
-            onCancelBooking={handleCancelBooking}
-            setRoute={setCurrentRoute}
-            showToast={showToast}
-          />
-        );
-      case "admin":
-        return (
-          <AdminDashboard
-            key="admin"
-            bookings={bookings}
-            onUpdateStatus={handleUpdateStatus}
-            onResetData={handleResetData}
-            showToast={showToast}
+            preSelectedService={selectedService}
           />
         );
       default:
-        return (
-          <HomePage
-            key="home"
-            setRoute={setCurrentRoute}
-            onSelectServiceForBooking={setSelectedPreService}
-          />
-        );
+        return <HomePage key="home" setRoute={setCurrentRoute} />;
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-brand-black selection:bg-brand-gold selection:text-brand-black">
+    <div className="min-h-screen flex flex-col bg-brand-black text-brand-cream selection:bg-brand-gold selection:text-brand-black">
       <CustomCursor />
-      <ToastContainer toasts={toasts} removeToast={removeToast} />
+      <Navigation currentRoute={currentRoute} setRoute={setCurrentRoute} />
 
-      <Navigation
-        currentRoute={currentRoute}
-        setRoute={setCurrentRoute}
-        bookingCount={bookings.length}
-      />
-
-      <main className="flex-1">
+      <main className="w-full min-h-screen">
         <AnimatePresence mode="wait">{renderPage()}</AnimatePresence>
       </main>
 

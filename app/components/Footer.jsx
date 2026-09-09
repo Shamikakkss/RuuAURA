@@ -54,7 +54,7 @@ export default function Footer() {
                 style={{ fontFamily: "var(--font-cinzel)" }}
                 className="text-2xl font-bold text-brand-cream tracking-widest"
               >
-                RUUAURA
+                RuuAURA
               </span>
               <span
                 style={{ fontFamily: "var(--font-cinzel)" }}

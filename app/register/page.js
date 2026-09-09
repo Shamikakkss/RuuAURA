@@ -48,13 +48,13 @@ export default function RegisterPage() {
         <div className="relative z-10 flex flex-col justify-end p-16">
           <Link href="/" className="flex flex-col leading-none mb-auto pt-8">
             <span style={{ fontFamily: "var(--font-cinzel)" }}
-                  className="text-2xl font-bold text-brand-cream tracking-widest">RUUAURA</span>
+                  className="text-2xl font-bold text-brand-cream tracking-widest">RuuAURA</span>
             <span style={{ fontFamily: "var(--font-cinzel)" }}
                   className="text-[8px] tracking-[0.4em] text-brand-gold uppercase mt-0.5">Beauty Sanctuary</span>
           </Link>
           <blockquote style={{ fontFamily: "var(--font-serif)" }}
                       className="text-2xl text-brand-cream leading-relaxed italic mb-4">
-            "Join the sanctuary and let us curate your beauty journey."
+            &quot;Join the sanctuary and let us curate your beauty journey.&quot;
           </blockquote>
           <p style={{ fontFamily: "var(--font-cinzel)" }}
              className="text-xs tracking-widest uppercase text-brand-gold">— The RuuAURA Community</p>
@@ -65,7 +65,7 @@ export default function RegisterPage() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 overflow-y-auto">
         <Link href="/" className="flex flex-col leading-none mb-10 lg:hidden">
           <span style={{ fontFamily: "var(--font-cinzel)" }}
-                className="text-2xl font-bold text-brand-cream tracking-widest">RUUAURA</span>
+                className="text-2xl font-bold text-brand-cream tracking-widest">RuuAURA</span>
           <span style={{ fontFamily: "var(--font-cinzel)" }}
                 className="text-[8px] tracking-[0.4em] text-brand-gold uppercase mt-0.5">Beauty Sanctuary</span>
         </Link>

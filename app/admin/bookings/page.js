@@ -2,7 +2,7 @@
 import { useState } from "react";
 import AdminSidebar from "../AdminSidebar";
 import Link from "next/link";
-import { SEED_BOOKINGS } from "@/data/mockData";
+import { getStoredBookings, updateStoredBooking } from "@/lib/demoStore";
 import {
   Calendar,
   Clock,
@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 export default function AdminBookingsPage() {
-  const [bookings, setBookings] = useState(SEED_BOOKINGS);
+  const [bookings, setBookings] = useState(() => getStoredBookings());
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -37,9 +37,7 @@ export default function AdminBookingsPage() {
   });
 
   const updateStatus = (id, newStatus) => {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
-    );
+    setBookings(updateStoredBooking(id, { status: newStatus }));
     if (selectedBooking && selectedBooking.id === id) {
       setSelectedBooking((prev) => ({ ...prev, status: newStatus }));
     }
@@ -49,7 +47,7 @@ export default function AdminBookingsPage() {
     <div className="min-h-screen bg-brand-darkest text-brand-cream flex">
       <AdminSidebar />
 
-      <main className="flex-1 p-6 md:p-10 overflow-x-hidden">
+      <main className="flex-1 p-6 pt-24 md:p-10 overflow-x-hidden">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-brand-border">
           <div>
@@ -104,6 +102,9 @@ export default function AdminBookingsPage() {
               <option value="Pending">Pending</option>
               <option value="Completed">Completed</option>
               <option value="Cancelled">Cancelled</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Change Requested">Change Requested</option>
+              <option value="No-show">No-show</option>
             </select>
           </div>
         </div>
@@ -288,7 +289,7 @@ export default function AdminBookingsPage() {
                     Special Client Notes
                   </span>
                   <p className="text-brand-cream/80 bg-brand-dark p-3 rounded text-xs leading-relaxed italic">
-                    "{selectedBooking.notes || "No special requests provided."}"
+                    &quot;{selectedBooking.notes || "No special requests provided."}&quot;
                   </p>
                 </div>
 
@@ -316,6 +317,30 @@ export default function AdminBookingsPage() {
                         className="px-3 py-1.5 bg-red-800 hover:bg-red-700 text-xs text-white rounded font-medium transition-colors"
                       >
                         Cancel
+                      </button>
+                    )}
+                    {selectedBooking.status !== "Rejected" && selectedBooking.status !== "Completed" && (
+                      <button
+                        onClick={() => updateStatus(selectedBooking.id, "Rejected")}
+                        className="px-3 py-1.5 bg-brand-muted/30 hover:bg-brand-muted/50 text-xs text-brand-cream rounded font-medium transition-colors"
+                      >
+                        Reject
+                      </button>
+                    )}
+                    {selectedBooking.status !== "Change Requested" && selectedBooking.status !== "Completed" && (
+                      <button
+                        onClick={() => updateStatus(selectedBooking.id, "Change Requested")}
+                        className="px-3 py-1.5 border border-brand-gold/40 hover:bg-brand-gold/10 text-xs text-brand-gold rounded font-medium transition-colors"
+                      >
+                        Request Change
+                      </button>
+                    )}
+                    {selectedBooking.status !== "No-show" && selectedBooking.status !== "Completed" && (
+                      <button
+                        onClick={() => updateStatus(selectedBooking.id, "No-show")}
+                        className="px-3 py-1.5 border border-brand-border hover:border-brand-cream text-xs text-brand-muted hover:text-brand-cream rounded font-medium transition-colors"
+                      >
+                        No-show
                       </button>
                     )}
                   </div>

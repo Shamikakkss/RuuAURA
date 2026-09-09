@@ -1,34 +1,10 @@
+"use client";
+import { useState } from "react";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import AccountSidebar from "../AccountSidebar";
 import { Bell, Calendar, CheckCircle, Info } from "lucide-react";
-
-const NOTIFICATIONS = [
-  {
-    id: "notif-1",
-    type: "booking",
-    title: "Appointment Confirmed",
-    message: "Your Signature Couture Haircut with Elena Rostova on Sep 12 at 10:00 AM has been confirmed.",
-    time: "2 hours ago",
-    read: false,
-  },
-  {
-    id: "notif-2",
-    type: "reminder",
-    title: "Upcoming Appointment Reminder",
-    message: "Reminder: Your Caviar & Gold Radiance Facial with Sophia Chen is on Sep 14 at 2:30 PM.",
-    time: "1 day ago",
-    read: false,
-  },
-  {
-    id: "notif-3",
-    type: "info",
-    title: "Welcome to RuuAURA",
-    message: "Thank you for joining RuuAURA Beauty Sanctuary. Book your first appointment to begin your journey.",
-    time: "3 days ago",
-    read: true,
-  },
-];
+import { getStoredNotifications, markAllNotificationsRead } from "@/lib/demoStore";
 
 const ICON_MAP = {
   booking: Calendar,
@@ -36,12 +12,10 @@ const ICON_MAP = {
   info: Info,
 };
 
-export const metadata = {
-  title: "Notifications — RuuAURA Account",
-};
-
 export default function NotificationsPage() {
-  const unread = NOTIFICATIONS.filter((n) => !n.read);
+  const [notifications, setNotifications] = useState(() => getStoredNotifications());
+  const items = notifications;
+  const unread = items.filter((n) => !n.read);
 
   return (
     <>
@@ -63,22 +37,24 @@ export default function NotificationsPage() {
                   </h2>
                 </div>
                 {unread.length > 0 && (
-                  <button style={{ fontFamily: "var(--font-cinzel)" }}
+                    <button
+                      onClick={() => setNotifications(markAllNotificationsRead())}
+                      style={{ fontFamily: "var(--font-cinzel)" }}
                           className="text-xs tracking-widest uppercase text-brand-muted hover:text-brand-gold transition-colors">
                     Mark All Read
                   </button>
                 )}
               </div>
 
-              {NOTIFICATIONS.length === 0 ? (
+              {items.length === 0 ? (
                 <div className="glass-card rounded-sm p-12 text-center">
                   <Bell size={36} className="text-brand-muted mx-auto mb-4" />
                   <p style={{ fontFamily: "var(--font-serif)" }} className="text-lg text-brand-cream mb-2">No notifications</p>
-                  <p className="text-sm text-brand-muted">You're all caught up. Check back after your next appointment.</p>
+                  <p className="text-sm text-brand-muted">You&apos;re all caught up. Check back after your next appointment.</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
-                  {NOTIFICATIONS.map((notif) => {
+                  {items.map((notif) => {
                     const Icon = ICON_MAP[notif.type] || Bell;
                     return (
                       <div

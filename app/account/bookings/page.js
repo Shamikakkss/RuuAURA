@@ -1,13 +1,11 @@
+"use client";
+import { useState } from "react";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import AccountSidebar from "../AccountSidebar";
 import Link from "next/link";
 import { Calendar, Clock, ChevronRight, CheckCircle, AlertCircle, XCircle } from "lucide-react";
-import { SEED_BOOKINGS } from "@/data/mockData";
-
-export const metadata = {
-  title: "My Bookings — RuuAURA Account",
-};
+import { getStoredBookings, updateStoredBooking } from "@/lib/demoStore";
 
 function StatusBadge({ status }) {
   const map = {
@@ -27,8 +25,15 @@ function StatusBadge({ status }) {
 }
 
 export default function BookingsPage() {
-  const upcoming = SEED_BOOKINGS.filter((b) => b.status === "Confirmed" || b.status === "Pending");
-  const past = SEED_BOOKINGS.filter((b) => b.status === "Completed" || b.status === "Cancelled");
+  const [bookings, setBookings] = useState(() => getStoredBookings());
+
+  const upcoming = (bookings || []).filter((b) => b.status === "Confirmed" || b.status === "Pending");
+  const past = (bookings || []).filter((b) => b.status === "Completed" || b.status === "Cancelled");
+
+  const handleCancel = (booking) => {
+    if (!window.confirm(`Cancel ${booking.serviceTitle}?`)) return;
+    setBookings(updateStoredBooking(booking.id, { status: "Cancelled" }));
+  };
 
   return (
     <>
@@ -59,7 +64,7 @@ export default function BookingsPage() {
                   />
                 ) : (
                   <div className="flex flex-col gap-4">
-                    {upcoming.map((b) => <BookingCard key={b.id} booking={b} />)}
+                    {upcoming.map((b) => <BookingCard key={b.id} booking={b} onCancel={handleCancel} />)}
                   </div>
                 )}
               </div>
@@ -87,7 +92,7 @@ export default function BookingsPage() {
   );
 }
 
-function BookingCard({ booking, isPast = false }) {
+function BookingCard({ booking, isPast = false, onCancel }) {
   return (
     <div className={`glass-card rounded-sm p-6 ${isPast ? "opacity-70" : ""}`}>
       <div className="flex flex-col md:flex-row md:items-center gap-5 justify-between">
@@ -122,7 +127,10 @@ function BookingCard({ booking, isPast = false }) {
 
         {!isPast && (
           <div className="flex gap-3 shrink-0">
-            <button className="btn-luxury border border-brand-border text-brand-muted px-4 py-2.5 rounded-sm hover:border-red-400/40 hover:text-red-400 text-xs">
+            <button
+              onClick={() => onCancel?.(booking)}
+              className="btn-luxury border border-brand-border text-brand-muted px-4 py-2.5 rounded-sm hover:border-red-400/40 hover:text-red-400 text-xs"
+            >
               Cancel
             </button>
             <Link href="/booking"

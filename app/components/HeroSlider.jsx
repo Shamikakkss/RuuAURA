@@ -76,7 +76,6 @@ export default function HeroSlider() {
             {/* Title */}
             <h1
               key={`title-${current}`}
-              style={{ fontFamily: "var(--font-cinzel)" }}
               className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-wider text-brand-cream mb-6 animate-fade-in-up leading-none"
               style={{ animationDelay: "150ms", fontFamily: "var(--font-cinzel)" }}
             >
@@ -87,7 +86,6 @@ export default function HeroSlider() {
             {/* Subtitle */}
             <p
               key={`sub-${current}`}
-              style={{ fontFamily: "var(--font-serif)" }}
               className="text-lg md:text-xl text-brand-cream-muted leading-relaxed mb-10 animate-fade-in-up max-w-xl"
               style={{ animationDelay: "200ms", fontFamily: "var(--font-serif)" }}
             >

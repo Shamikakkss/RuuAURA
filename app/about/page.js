@@ -121,7 +121,7 @@ export default function AboutPage() {
         <section className="py-20 bg-brand-dark border-y border-brand-border relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(197,163,101,0.06)_0%,transparent_60%)]" />
           <div className="container-luxury text-center relative z-10">
-            <span className="text-5xl text-brand-gold/30 block mb-6">"</span>
+            <span className="text-5xl text-brand-gold/30 block mb-6">&quot;</span>
             <blockquote
               style={{ fontFamily: "var(--font-serif)" }}
               className="text-2xl md:text-3xl font-medium text-brand-cream max-w-3xl mx-auto leading-relaxed"

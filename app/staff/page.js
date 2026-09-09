@@ -30,7 +30,7 @@ export default function StaffPage() {
               Our Artisans
             </h1>
             <p className="text-brand-muted max-w-xl mx-auto text-lg leading-relaxed">
-              Internationally trained specialists who bring the world's finest techniques to Colombo's most exclusive beauty sanctuary.
+              Internationally trained specialists who bring the world&apos;s finest techniques to Colombo&apos;s most exclusive beauty sanctuary.
             </p>
           </div>
         </section>
@@ -54,8 +54,8 @@ export default function StaffPage() {
               style={{ fontFamily: "var(--font-serif)" }}
               className="text-3xl md:text-4xl font-medium text-brand-cream-muted italic max-w-3xl mx-auto leading-relaxed"
             >
-              "True beauty artistry is not about transformation — it is about{" "}
-              <em className="text-brand-gold not-italic">revelation</em>. We simply unveil what was always there."
+              &quot;True beauty artistry is not about transformation — it is about{" "}
+              <em className="text-brand-gold not-italic">revelation</em>. We simply unveil what was always there.&quot;
             </blockquote>
             <p
               style={{ fontFamily: "var(--font-cinzel)" }}

@@ -68,7 +68,7 @@ export default function AdminNotificationsPage() {
     <div className="min-h-screen bg-brand-darkest text-brand-cream flex">
       <AdminSidebar />
 
-      <main className="flex-1 p-6 md:p-10 overflow-x-hidden">
+      <main className="flex-1 p-6 pt-24 md:p-10 overflow-x-hidden">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-brand-border">
           <div>

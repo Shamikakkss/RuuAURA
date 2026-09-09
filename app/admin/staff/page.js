@@ -8,6 +8,7 @@ import { Users, Star, Plus, Mail, Calendar, Check, X, Award } from "lucide-react
 export default function AdminStaffPage() {
   const [artisansList, setArtisansList] = useState(ARTISANS);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [newArtisan, setNewArtisan] = useState({
     name: "",
     role: "",
@@ -16,17 +17,19 @@ export default function AdminStaffPage() {
     rating: "5.00 ★",
   });
 
-  const handleAdd = (e) => {
+  const handleSave = (e) => {
     e.preventDefault();
     if (!newArtisan.name || !newArtisan.role) return;
     const item = {
       ...newArtisan,
-      id: `art-${Date.now()}`,
+      id: editingId || `art-${Date.now()}`,
+      active: true,
       fallback:
         "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=1000&auto=format&fit=crop",
     };
-    setArtisansList((prev) => [item, ...prev]);
+    setArtisansList((prev) => editingId ? prev.map((artisan) => artisan.id === editingId ? { ...artisan, ...item } : artisan) : [item, ...prev]);
     setIsModalOpen(false);
+    setEditingId(null);
     setNewArtisan({
       name: "",
       role: "",
@@ -36,11 +39,21 @@ export default function AdminStaffPage() {
     });
   };
 
+  const handleEdit = (artisan) => {
+    setEditingId(artisan.id);
+    setNewArtisan(artisan);
+    setIsModalOpen(true);
+  };
+
+  const handleToggleActive = (id) => {
+    setArtisansList((prev) => prev.map((artisan) => artisan.id === id ? { ...artisan, active: artisan.active === false } : artisan));
+  };
+
   return (
     <div className="min-h-screen bg-brand-darkest text-brand-cream flex">
       <AdminSidebar />
 
-      <main className="flex-1 p-6 md:p-10 overflow-x-hidden">
+      <main className="flex-1 p-6 pt-24 md:p-10 overflow-x-hidden">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-brand-border">
           <div>
@@ -111,9 +124,15 @@ export default function AdminStaffPage() {
                 <div className="pt-4 border-t border-brand-border/60 mt-4 flex items-center justify-between text-xs">
                   <span className="text-emerald-400 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    Available for Bookings
+                    {art.active === false ? "Archived" : "Available for Bookings"}
                   </span>
                   <div className="flex gap-2">
+                    <button onClick={() => handleToggleActive(art.id)} className="text-brand-gold text-xs px-2 py-1 rounded">
+                      {art.active === false ? "Restore" : "Archive"}
+                    </button>
+                    <button onClick={() => handleEdit(art)} className="text-brand-muted hover:text-brand-gold text-xs px-2 py-1 rounded">
+                      Edit
+                    </button>
                     <button
                       onClick={() =>
                         setArtisansList((prev) => prev.filter((a) => a.id !== art.id))
@@ -144,10 +163,10 @@ export default function AdminStaffPage() {
                 style={{ fontFamily: "var(--font-cinzel)" }}
                 className="text-xl font-light text-brand-cream mb-6"
               >
-                Register Master Artisan
+                {editingId ? "Edit Master Artisan" : "Register Master Artisan"}
               </h2>
 
-              <form onSubmit={handleAdd} className="space-y-4 text-sm">
+              <form onSubmit={handleSave} className="space-y-4 text-sm">
                 <div>
                   <label className="block text-xs uppercase tracking-wider text-brand-muted mb-1">
                     Artisan Name *

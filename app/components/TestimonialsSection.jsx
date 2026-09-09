@@ -73,7 +73,7 @@ export default function TestimonialsSection() {
               style={{ fontFamily: "var(--font-serif)" }}
               className="text-lg md:text-xl text-brand-cream-muted leading-relaxed italic mb-8"
             >
-              "{t.text}"
+              &quot;{t.text}&quot;
             </p>
 
             {/* Service tag */}

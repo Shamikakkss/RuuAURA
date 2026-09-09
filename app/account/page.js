@@ -1,14 +1,11 @@
+"use client";
+import { useState } from "react";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import AccountSidebar from "./AccountSidebar";
 import Link from "next/link";
 import { Calendar, Bell, ChevronRight, Clock, CheckCircle, AlertCircle, XCircle } from "lucide-react";
-import { SEED_BOOKINGS } from "@/data/mockData";
-
-export const metadata = {
-  title: "My Account — RuuAURA",
-  description: "Manage your RuuAURA appointments, profile and notifications.",
-};
+import { getStoredBookings, updateStoredBooking } from "@/lib/demoStore";
 
 function StatusBadge({ status }) {
   const map = {
@@ -28,8 +25,14 @@ function StatusBadge({ status }) {
 }
 
 export default function AccountPage() {
-  const upcoming = SEED_BOOKINGS.filter((b) => b.status !== "Completed" && b.status !== "Cancelled");
+  const [bookings, setBookings] = useState(() => getStoredBookings());
+  const upcoming = bookings.filter((b) => b.status !== "Completed" && b.status !== "Cancelled");
   const next = upcoming[0];
+
+  const cancelNext = () => {
+    if (!next || !window.confirm(`Cancel ${next.serviceTitle}?`)) return;
+    setBookings(updateStoredBooking(next.id, { status: "Cancelled" }));
+  };
 
   return (
     <>
@@ -55,10 +58,10 @@ export default function AccountPage() {
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: "Total Bookings", value: "3", icon: Calendar },
-                  { label: "Upcoming", value: "2", icon: Clock },
-                  { label: "Completed", value: "1", icon: CheckCircle },
-                  { label: "Notifications", value: "1", icon: Bell },
+                  { label: "Total Bookings", value: bookings.length, icon: Calendar },
+                  { label: "Upcoming", value: upcoming.length, icon: Clock },
+                  { label: "Completed", value: bookings.filter((b) => b.status === "Completed").length, icon: CheckCircle },
+                  { label: "Notifications", value: "View", icon: Bell },
                 ].map(({ label, value, icon: Icon }) => (
                   <div key={label} className="glass-card rounded-sm p-5 text-center">
                     <Icon size={18} className="text-brand-gold mx-auto mb-3" />
@@ -106,7 +109,7 @@ export default function AccountPage() {
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <button className="btn-luxury border border-brand-border text-brand-muted px-5 py-2.5 rounded-sm hover:border-red-400/40 hover:text-red-400 text-xs">
+                      <button onClick={cancelNext} className="btn-luxury border border-brand-border text-brand-muted px-5 py-2.5 rounded-sm hover:border-red-400/40 hover:text-red-400 text-xs">
                         Cancel
                       </button>
                       <Link href="/booking"

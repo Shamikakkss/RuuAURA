@@ -39,13 +39,13 @@ export default function LoginPage() {
         <div className="relative z-10 flex flex-col justify-end p-16">
           <Link href="/" className="flex flex-col leading-none mb-auto pt-8">
             <span style={{ fontFamily: "var(--font-cinzel)" }}
-                  className="text-2xl font-bold text-brand-cream tracking-widest">RUUAURA</span>
+                  className="text-2xl font-bold text-brand-cream tracking-widest">RuuAURA</span>
             <span style={{ fontFamily: "var(--font-cinzel)" }}
                   className="text-[8px] tracking-[0.4em] text-brand-gold uppercase mt-0.5">Beauty Sanctuary</span>
           </Link>
           <blockquote style={{ fontFamily: "var(--font-serif)" }}
                       className="text-2xl text-brand-cream leading-relaxed italic mb-4">
-            "Your sanctuary moment begins with a single step."
+            &quot;Your sanctuary moment begins with a single step.&quot;
           </blockquote>
           <p style={{ fontFamily: "var(--font-cinzel)" }}
              className="text-xs tracking-widest uppercase text-brand-gold">
@@ -59,7 +59,7 @@ export default function LoginPage() {
         {/* Mobile Logo */}
         <Link href="/" className="flex flex-col leading-none mb-10 lg:hidden">
           <span style={{ fontFamily: "var(--font-cinzel)" }}
-                className="text-2xl font-bold text-brand-cream tracking-widest">RUUAURA</span>
+                className="text-2xl font-bold text-brand-cream tracking-widest">RuuAURA</span>
           <span style={{ fontFamily: "var(--font-cinzel)" }}
                 className="text-[8px] tracking-[0.4em] text-brand-gold uppercase mt-0.5">Beauty Sanctuary</span>
         </Link>
@@ -77,7 +77,7 @@ export default function LoginPage() {
                 <LogIn size={22} className="text-green-400" />
               </div>
               <p style={{ fontFamily: "var(--font-serif)" }} className="text-xl text-brand-cream mb-2">Welcome back!</p>
-              <p className="text-brand-muted text-sm mb-6">You're now signed in to RuuAURA.</p>
+              <p className="text-brand-muted text-sm mb-6">You&apos;re now signed in to RuuAURA.</p>
               <Link href="/account"
                     className="btn-luxury bg-brand-gold text-brand-black px-8 py-4 rounded-sm hover:bg-brand-gold-light text-xs">
                 Go to Account <ChevronRight size={13} />
@@ -159,7 +159,7 @@ export default function LoginPage() {
               </button>
 
               <p className="text-center text-sm text-brand-muted">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/register" className="text-brand-gold hover:underline">
                   Create one
                 </Link>
