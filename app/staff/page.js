@@ -30,7 +30,7 @@ export default function StaffPage() {
               Our Artisans
             </h1>
             <p className="text-brand-muted max-w-xl mx-auto text-lg leading-relaxed">
-              Internationally trained specialists who bring the world&apos;s finest techniques to Colombo&apos;s most exclusive beauty sanctuary.
+              Internationally trained specialists who bring the world&apos;s finest techniques to Dehiwala&apos;s most exclusive beauty sanctuary.
             </p>
           </div>
         </section>

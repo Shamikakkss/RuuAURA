@@ -656,7 +656,7 @@ const Navigation = ({ currentRoute, setRoute }) => {
             >
               <div>
                 <p className="text-brand-cream mb-1">Location</p>
-                <p>142 Ward Place, Colombo 07</p>
+                <p>142 Galle Road, Dehiwala</p>
               </div>
               <div>
                 <p className="text-brand-cream mb-1">Contact</p>
@@ -1001,7 +1001,7 @@ const GalleryPage = ({ setRoute }) => {
         </RevealText>
         <FadeIn delay={0.3}>
           <p className="text-brand-cream/70 font-sans font-light text-lg">
-            A visual journey through the haute coiffure, serene wellness suites, and radiant beauty artistry of RuuAURA Colombo 07.
+            A visual journey through the haute coiffure, serene wellness suites, and radiant beauty artistry of RuuAURA Dehiwala.
           </p>
         </FadeIn>
       </div>
@@ -1058,7 +1058,7 @@ const GalleryPage = ({ setRoute }) => {
             Experience the Sanctuary in Person
           </h4>
           <p className="text-sm font-sans text-brand-cream/70 font-light max-w-xl">
-            Book your private consultation or beauty ritual in our Colombo 07 atelier today.
+            Book your private consultation or beauty ritual in our Dehiwala sanctuary today.
           </p>
         </div>
         <button
@@ -1165,7 +1165,7 @@ const BookingPage = ({ preSelectedService }) => {
               Location & Contact
             </h4>
             <p className="text-brand-cream/90 text-base font-light mb-4">
-              142 Ward Place, Colombo 07
+              142 Galle Road, Dehiwala
               <br />
               Western Province, Sri Lanka
             </p>
