@@ -37,8 +37,6 @@
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -48,12 +46,36 @@ html {
 
 body {
   background-color: #070708;
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(197, 163, 101, 0.07), transparent 28rem),
+    radial-gradient(circle at 88% 36%, rgba(255, 255, 255, 0.025), transparent 24rem);
   color: #f5f2eb;
   overflow-x: hidden;
   font-family: var(--font-sans);
   cursor: default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 1px solid var(--color-brand-gold-light);
+  outline-offset: 4px;
+}
+
+::placeholder {
+  color: rgba(131, 131, 141, 0.72);
 }
 
 /* ─── Desktop Custom Magnetic Cursor ─── */
@@ -181,6 +203,22 @@ body {
 /* ─── Ambient Glow Utility ─── */
 .ambient-glow {
   background: radial-gradient(circle at 50% 50%, rgba(197, 163, 101, 0.08) 0%, transparent 70%);
+}
+
+/* Keeps the editorial layout readable without creating a boxed-in page. */
+.container-luxury {
+  width: min(100% - 3rem, 82rem);
+  margin-inline: auto;
+}
+
+.section-pad {
+  padding-block: clamp(5rem, 10vw, 9rem);
+}
+
+@media (max-width: 640px) {
+  .container-luxury {
+    width: min(100% - 2rem, 82rem);
+  }
 }
 
 /* ─── Gold Gradient Text ─── */

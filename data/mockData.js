@@ -4,7 +4,7 @@ export const HERO_SLIDES = [
     tagline: "COLOMBO 07 • SANCTUARY OF ARTISANS",
     title: "RUUAURA",
     subtitle: "The Sanctuary of Haute Coiffure & Aesthetic Radiance",
-    img: "/images/background/hero-1.jpg",
+    img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2574&auto=format&fit=crop",
     fallback: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2574&auto=format&fit=crop",
   },
   {
@@ -12,16 +12,16 @@ export const HERO_SLIDES = [
     tagline: "INDIVIDUALITY REDEFINED",
     title: "RUUAURA",
     subtitle: "Bespoke Hair Sculpting & International Color Formulations",
-    img: "/images/background/hero-2.jpg",
-    fallback: "https://images.unsplash.com/photo-1600334129128-685c5582fc35?q=80&w=2670&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=2574&auto=format&fit=crop",
+    fallback: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=2574&auto=format&fit=crop",
   },
   {
     id: 3,
     tagline: "EXCLUSIVE PRIVATE RETREAT",
     title: "RUUAURA",
     subtitle: "Cellular Rejuvenation and Botanical Spa Rituals",
-    img: "/images/background/hero-3.jpg",
-    fallback: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=2669&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2574&auto=format&fit=crop",
+    fallback: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2574&auto=format&fit=crop",
   },
 ];
 
@@ -36,8 +36,8 @@ export const SERVICES = [
     tag: "Most Requested",
     desc: "Sculptural precision haircut tailored to facial architecture, bone structure, and lifestyle. Includes scalp detox and organic blow-dry finish.",
     products: "Oribe Gold Lust, Balmain Paris Hair Couture",
-    img: "/images/services/haircut-styling.jpg",
-    fallback: "https://images.unsplash.com/photo-1595476108010-b4d1f10d5e42?q=80&w=1000&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1000&auto=format&fit=crop",
+    fallback: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "srv-2",
@@ -49,8 +49,8 @@ export const SERVICES = [
     tag: "Master Artistry",
     desc: "Hand-painted bespoke highlights creating seamless, sun-lit dimension with custom gloss glaze and botanical bond-building treatment.",
     products: "L'Oréal Professionnel Metal Detox, Wella Illumina",
-    img: "/images/services/balayage-color.jpg",
-    fallback: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=1000&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?q=80&w=1000&auto=format&fit=crop",
+    fallback: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "srv-3",
@@ -62,7 +62,7 @@ export const SERVICES = [
     tag: "Sanctuary Exclusive",
     desc: "Cellular rejuvenation utilizing micro-current sculpting, 24K gold infused botanical serums, and deep lymphatic cranial drainage.",
     products: "Valmont Switzerland, Biologique Recherche",
-    img: "/images/services/spa-facial.jpg",
+    img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1000&auto=format&fit=crop",
     fallback: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1000&auto=format&fit=crop",
   },
   {
@@ -75,7 +75,7 @@ export const SERVICES = [
     tag: "Holistic",
     desc: "Japanese head spa ritual with botanical micro-mist infusion, pressure-point tension relief, and pure cold-pressed rosemary oil.",
     products: "Aveda Botanical Kinetics, Organic Rosemary Elixir",
-    img: "/images/services/scalp-therapy.jpg",
+    img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1000&auto=format&fit=crop",
     fallback: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1000&auto=format&fit=crop",
   },
   {
@@ -88,8 +88,8 @@ export const SERVICES = [
     tag: "VIP Editorial",
     desc: "Comprehensive luxury bridal design including high-fashion hair architecture, radiant HD editorial makeup, and veil placement.",
     products: "Charlotte Tilbury, Tom Ford Beauty, Dyson Supersonic Pro",
-    img: "/images/services/bridal-couture.jpg",
-    fallback: "https://images.unsplash.com/photo-1512413914619-0158bcebc3a4?q=80&w=1000&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop",
+    fallback: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "srv-6",
@@ -101,7 +101,7 @@ export const SERVICES = [
     tag: "Nail Art",
     desc: "Precision Russian dry manicure, organic apricot cuticle nourishment, and bespoke chrome or velvet magnet finish.",
     products: "The GelBottle Inc, Bio Sculpture Gel",
-    img: "/images/services/nail-artistry.jpg",
+    img: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1000&auto=format&fit=crop",
     fallback: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1000&auto=format&fit=crop",
   },
 ];
@@ -114,7 +114,7 @@ export const ARTISANS = [
     specialty: "Couture Hair Architecture & Runway Cuts",
     exp: "12+ Years (Paris & London)",
     rating: "4.98 ★",
-    img: "/images/staff/artisan-1.jpg",
+    img: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=1000&auto=format&fit=crop",
     fallback: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=1000&auto=format&fit=crop",
   },
   {
@@ -124,8 +124,8 @@ export const ARTISANS = [
     specialty: "Editorial Color Melts & Dimensional Blonding",
     exp: "10+ Years (Milan & Dubai)",
     rating: "4.96 ★",
-    img: "/images/staff/artisan-2.jpg",
-    fallback: "https://images.unsplash.com/photo-1618077360395-f3068be8e001?q=80&w=1000&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop",
+    fallback: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "art-3",
@@ -134,8 +134,8 @@ export const ARTISANS = [
     specialty: "Cellular Facial Therapy & Lymphatic Sculpting",
     exp: "9+ Years (Tokyo & Singapore)",
     rating: "5.00 ★",
-    img: "/images/staff/artisan-3.jpg",
-    fallback: "https://images.unsplash.com/photo-1605497788044-5a32c707d5d4?q=80&w=1000&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop",
+    fallback: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "art-4",
@@ -144,8 +144,8 @@ export const ARTISANS = [
     specialty: "High-Fashion Editorial & Radiant Bridal Looks",
     exp: "8+ Years (New York)",
     rating: "4.97 ★",
-    img: "/images/staff/artisan-4.jpg",
-    fallback: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop",
+    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000&auto=format&fit=crop",
+    fallback: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000&auto=format&fit=crop",
   },
 ];
 
