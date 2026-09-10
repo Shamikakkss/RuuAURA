@@ -452,10 +452,9 @@ const HeroSlider = () => {
 // ==========================================
 // NAVIGATION COMPONENT (RuuAURA + Dynamic Member Auth)
 // ==========================================
-const Navigation = ({ currentRoute, setRoute }) => {
+const Navigation = ({ currentRoute, setRoute, onOpenAccount }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const { isLoggedIn, user, logout } = useAuth();
 
   useEffect(() => {
@@ -538,7 +537,7 @@ const Navigation = ({ currentRoute, setRoute }) => {
             {isLoggedIn ? (
               /* Signed In Profile Button */
               <button
-                onClick={() => setIsAccountOpen(true)}
+                onClick={() => onOpenAccount?.("dashboard")}
                 title={`${user.name} — Member Portal`}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/40 hover:bg-brand-gold/20 hover:border-brand-gold transition-all duration-300 group"
               >
@@ -652,7 +651,7 @@ const Navigation = ({ currentRoute, setRoute }) => {
                       <button
                         onClick={() => {
                           setIsOpen(false);
-                          setIsAccountOpen(true);
+                          onOpenAccount?.("dashboard");
                         }}
                         className="text-xs font-sans tracking-widest uppercase text-brand-black bg-brand-gold hover:bg-white font-semibold transition-colors py-2.5 px-5"
                       >
@@ -710,12 +709,6 @@ const Navigation = ({ currentRoute, setRoute }) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Synchronized Account Modal */}
-      <AccountModal
-        isOpen={isAccountOpen}
-        onClose={() => setIsAccountOpen(false)}
-      />
     </>
   );
 };
@@ -1843,7 +1836,8 @@ const ContactPage = ({ setRoute }) => {
 // ==========================================
 // FOOTER
 // ==========================================
-const Footer = ({ setRoute }) => {
+const Footer = ({ setRoute, onOpenAccount }) => {
+  const { isLoggedIn } = useAuth();
   return (
     <footer className="bg-brand-dark pt-24 pb-12 px-6 md:px-16 container mx-auto">
       <div className="flex flex-col items-center justify-center border-b border-white/10 pb-16 mb-10 text-center">
@@ -1929,12 +1923,21 @@ const Footer = ({ setRoute }) => {
           >
             Contact
           </button>
-          <Link
-            href="/login"
-            className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
-          >
-            Sign In
-          </Link>
+          {isLoggedIn ? (
+            <button
+              onClick={() => onOpenAccount?.("dashboard")}
+              className="text-xs font-sans tracking-widest uppercase text-brand-gold hover:text-white transition-colors font-medium"
+            >
+              My Account
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="text-xs font-sans tracking-widest uppercase text-brand-cream/70 hover:text-brand-gold transition-colors"
+            >
+              Sign In
+            </Link>
+          )}
           <button
             onClick={() => {
               setRoute("booking");
@@ -2033,6 +2036,38 @@ const Footer = ({ setRoute }) => {
 export default function AllInOneSanctuary() {
   const [currentRoute, setCurrentRoute] = useState("home");
   const [selectedService, setSelectedService] = useState(null);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [accountTab, setAccountTab] = useState("dashboard");
+
+  const handleOpenAccount = (tab = "dashboard") => {
+    setAccountTab(tab);
+    setIsAccountOpen(true);
+  };
+
+  useEffect(() => {
+    // Check URL parameters for direct modal open
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const modalParam = params.get("modal");
+      const accountParam = params.get("account");
+      if (modalParam) {
+        handleOpenAccount(modalParam);
+      } else if (accountParam === "true" || accountParam === "1") {
+        handleOpenAccount("dashboard");
+      }
+    }
+
+    // Custom event listener for anywhere in the app
+    const handleCustomOpen = (e) => {
+      const tab = e.detail?.tab || "dashboard";
+      handleOpenAccount(tab);
+    };
+    window.addEventListener("ruuaura_open_account", handleCustomOpen);
+
+    return () => {
+      window.removeEventListener("ruuaura_open_account", handleCustomOpen);
+    };
+  }, []);
 
   const handleSelectServiceAndBook = (service) => {
     setSelectedService(service);
@@ -2084,13 +2119,27 @@ export default function AllInOneSanctuary() {
   return (
     <div className="min-h-screen flex flex-col bg-brand-black text-brand-cream selection:bg-brand-gold selection:text-brand-black">
       <CustomCursor />
-      <Navigation currentRoute={currentRoute} setRoute={setCurrentRoute} />
+      <Navigation
+        currentRoute={currentRoute}
+        setRoute={setCurrentRoute}
+        onOpenAccount={handleOpenAccount}
+      />
 
       <main className="w-full min-h-screen">
         <AnimatePresence mode="wait">{renderPage()}</AnimatePresence>
       </main>
 
-      <Footer setRoute={setCurrentRoute} />
+      <Footer
+        setRoute={setCurrentRoute}
+        onOpenAccount={handleOpenAccount}
+      />
+
+      {/* Global Synchronized Luxury Account Modal */}
+      <AccountModal
+        isOpen={isAccountOpen}
+        initialTab={accountTab}
+        onClose={() => setIsAccountOpen(false)}
+      />
     </div>
   );
 }

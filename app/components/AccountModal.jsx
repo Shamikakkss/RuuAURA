@@ -9,8 +9,10 @@ import {
 import { useAuth, DEFAULT_USER } from "@/lib/authStore";
 import {
   getStoredBookings, updateStoredBooking,
-  getStoredNotifications, markAllNotificationsRead
+  getStoredNotifications, markAllNotificationsRead,
+  SEED_NOTIFICATIONS
 } from "@/lib/demoStore";
+import { SEED_BOOKINGS } from "@/data/mockData";
 
 function StatusBadge({ status }) {
   const map = {
@@ -31,13 +33,13 @@ function StatusBadge({ status }) {
   );
 }
 
-export default function AccountModal({ isOpen, onClose }) {
+export default function AccountModal({ isOpen, onClose, initialTab = "dashboard" }) {
   const { user = DEFAULT_USER, logout, updateProfile } = useAuth();
-  const [activeTab, setActiveTab] = useState("dashboard"); // 'dashboard' | 'bookings' | 'profile' | 'notifications'
+  const [activeTab, setActiveTab] = useState(initialTab || "dashboard"); // 'dashboard' | 'bookings' | 'profile' | 'notifications'
   
   // State initialization
-  const [bookings, setBookings] = useState(() => getStoredBookings() || []);
-  const [notifications, setNotifications] = useState(() => getStoredNotifications() || []);
+  const [bookings, setBookings] = useState(SEED_BOOKINGS);
+  const [notifications, setNotifications] = useState(SEED_NOTIFICATIONS);
   
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -50,6 +52,9 @@ export default function AccountModal({ isOpen, onClose }) {
 
   useEffect(() => {
     if (isOpen) {
+      if (initialTab) {
+        setActiveTab(initialTab);
+      }
       const refresh = window.setTimeout(() => {
         setBookings(getStoredBookings() || []);
         setNotifications(getStoredNotifications() || []);
