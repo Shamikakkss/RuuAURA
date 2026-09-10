@@ -99,7 +99,7 @@ export default function LoginPage() {
               </div>
               <p style={{ fontFamily: "var(--font-serif)" }} className="text-xl text-brand-cream mb-2">Welcome back!</p>
               <p className="text-brand-muted text-sm mb-6">You&apos;re now signed in to RuuAURA.</p>
-              <Link href="/"
+              <Link href="/account"
                     className="btn-luxury bg-brand-gold text-brand-black px-8 py-4 rounded-sm hover:bg-brand-gold-light text-xs font-semibold uppercase tracking-widest">
                 Return to Sanctuary <ChevronRight size={13} />
               </Link>

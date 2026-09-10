@@ -50,15 +50,21 @@ export default function AccountModal({ isOpen, onClose }) {
 
   useEffect(() => {
     if (isOpen) {
-      setBookings(getStoredBookings() || []);
-      setNotifications(getStoredNotifications() || []);
-      setProfileForm({
-        name: user?.name || "Jane Sterling",
-        email: user?.email || "jane.sterling@example.com",
-        phone: user?.phone || "+94 77 123 4567",
-        whatsapp: user?.whatsapp || "+94 77 123 4567",
-      });
+      const refresh = window.setTimeout(() => {
+        setBookings(getStoredBookings() || []);
+        setNotifications(getStoredNotifications() || []);
+        setProfileForm({
+          name: user?.name || "Jane Sterling",
+          email: user?.email || "jane.sterling@example.com",
+          phone: user?.phone || "+94 77 123 4567",
+          whatsapp: user?.whatsapp || "+94 77 123 4567",
+        });
+      }, 0);
       document.body.style.overflow = "hidden";
+      return () => {
+        window.clearTimeout(refresh);
+        document.body.style.overflow = "";
+      };
     } else {
       document.body.style.overflow = "";
     }

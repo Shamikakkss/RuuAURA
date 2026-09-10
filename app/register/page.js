@@ -160,7 +160,7 @@ export default function RegisterPage() {
                 Your RuuAURA membership account is active. You are now logged in and ready to access your personal dashboard.
               </p>
               <Link
-                href="/"
+                href="/account"
                 className="btn-luxury bg-brand-gold text-brand-black px-8 py-4 rounded-sm hover:bg-brand-gold-light text-xs font-semibold uppercase tracking-widest"
               >
                 Enter Sanctuary & Dashboard <ChevronRight size={13} />

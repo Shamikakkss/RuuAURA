@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function WhatsAppWidget() {
   const [isHovered, setIsHovered] = useState(false);
   const [isNearFooter, setIsNearFooter] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [mounted] = useState(true);
 
   const phoneNumber = "94771234567";
   const defaultMessage = encodeURIComponent(
@@ -14,7 +14,6 @@ export default function WhatsAppWidget() {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${defaultMessage}`;
 
   useEffect(() => {
-    setMounted(true);
     const checkFooterVisibility = () => {
       const footer = document.querySelector("footer");
       if (footer) {

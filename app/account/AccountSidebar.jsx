@@ -35,6 +35,7 @@ export default function AccountSidebar() {
           {/* Avatar */}
           <div className="w-14 h-14 rounded-full bg-brand-gold/15 border border-brand-gold/30 flex items-center justify-center">
             <span
+              suppressHydrationWarning
               className="text-lg font-bold text-brand-gold"
               style={{ fontFamily: "var(--font-cinzel)" }}
             >
@@ -45,18 +46,19 @@ export default function AccountSidebar() {
           {/* Name & email */}
           <div>
             <p
+              suppressHydrationWarning
               className="text-sm font-semibold text-brand-cream leading-snug"
               style={{ fontFamily: "var(--font-serif)" }}
             >
               {user.name || "Jane Sterling"}
             </p>
-            <p className="text-[11px] text-brand-muted mt-0.5 truncate max-w-[160px]">
+            <p suppressHydrationWarning className="text-[11px] text-brand-muted mt-0.5 truncate max-w-[160px]">
               {user.email || "jane.sterling@example.com"}
             </p>
           </div>
 
           {/* Tier badge */}
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-[10px] text-brand-gold"
+          <span suppressHydrationWarning className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-brand-gold/10 border border-brand-gold/20 text-[10px] text-brand-gold"
                 style={{ fontFamily: "var(--font-cinzel)" }}>
             <Sparkles size={9} />
             {user.tier || "Sanctuary Member"}
