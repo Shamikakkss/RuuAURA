@@ -828,15 +828,9 @@ function BookingSuccess({ booking }) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="btn-luxury border border-brand-border text-brand-cream-muted px-8 py-4 rounded-sm hover:border-brand-gold hover:text-brand-gold text-xs"
-            >
-              Return Home
-            </Link>
-            <Link
-              href="/account/bookings"
               className="btn-luxury bg-brand-gold text-brand-black px-8 py-4 rounded-sm hover:bg-brand-gold-light text-xs"
             >
-              View My Bookings
+              Return to Sanctuary
               <ChevronRight size={13} />
             </Link>
           </div>
