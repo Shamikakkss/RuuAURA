@@ -505,7 +505,7 @@ const Navigation = ({ currentRoute, setRoute, onOpenAccount }) => {
             onClick={() => handleNavigate("home")}
           >
             <div className="text-2xl md:text-3xl font-serif tracking-wider text-brand-cream group-hover:text-brand-gold transition-colors font-bold">
-              RuuAURA<span className="text-brand-gold">.</span>
+              Ruu<span className="text-brand-gold">AURA</span><span className="text-brand-gold">.</span>
             </div>
           </div>
 
@@ -600,7 +600,7 @@ const Navigation = ({ currentRoute, setRoute, onOpenAccount }) => {
                 onClick={() => handleNavigate("home")}
               >
                 <div className="text-2xl md:text-3xl font-serif tracking-wider text-brand-cream font-bold">
-                  RuuAURA<span className="text-brand-gold">.</span>
+                  Ruu<span className="text-brand-gold">AURA</span><span className="text-brand-gold">.</span>
                 </div>
               </div>
               <button
@@ -1850,7 +1850,7 @@ const Footer = ({ setRoute, onOpenAccount }) => {
             className="cursor-pointer group select-none flex flex-col items-center"
           >
             <h2 className="text-7xl md:text-[10rem] font-serif leading-none tracking-tight text-center text-brand-cream group-hover:text-brand-gold transition-colors duration-500 font-bold">
-              RuuAURA<span className="text-brand-gold">.</span>
+              Ruu<span className="text-brand-gold">AURA</span><span className="text-brand-gold">.</span>
             </h2>
             <span className="text-xs md:text-sm font-sans tracking-[0.4em] uppercase text-brand-gold font-light mt-2">
               Beauty Sanctuary
