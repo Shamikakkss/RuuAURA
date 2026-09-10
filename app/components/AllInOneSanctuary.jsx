@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/lib/authStore";
+import AccountModal from "@/app/components/AccountModal";
 
 // ==========================================
 // MOCK DATA & IMAGES (From user's specification)
@@ -448,11 +450,13 @@ const HeroSlider = () => {
 };
 
 // ==========================================
-// NAVIGATION COMPONENT (RuuAURA + Sign In)
+// NAVIGATION COMPONENT (RuuAURA + Dynamic Member Auth)
 // ==========================================
 const Navigation = ({ currentRoute, setRoute }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const { isLoggedIn, user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -529,14 +533,38 @@ const Navigation = ({ currentRoute, setRoute }) => {
             ))}
           </nav>
 
-          {/* Right Actions: Login Button + Book Now + Menu */}
-          <div className="flex items-center gap-4 md:gap-6">
-            <Link
-              href="/login"
-              className="text-xs font-sans tracking-[0.15em] uppercase text-brand-cream/90 hover:text-brand-gold transition-colors px-3 py-2 border border-white/20 hover:border-brand-gold/60"
-            >
-              Sign In
-            </Link>
+          {/* Right Actions: Member Profile / Login + Book Now + Menu */}
+          <div className="flex items-center gap-3 md:gap-5">
+            {isLoggedIn ? (
+              /* Signed In Profile Button */
+              <button
+                onClick={() => setIsAccountOpen(true)}
+                title={`${user.name} — Member Portal`}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/40 hover:bg-brand-gold/20 hover:border-brand-gold transition-all duration-300 group"
+              >
+                <div className="w-6 h-6 rounded-full bg-brand-gold/25 border border-brand-gold/50 flex items-center justify-center">
+                  <span
+                    className="text-[9px] font-bold text-brand-gold group-hover:text-brand-gold-light"
+                    style={{ fontFamily: "var(--font-cinzel)" }}
+                  >
+                    {user.initials || "JS"}
+                  </span>
+                </div>
+                <span
+                  style={{ fontFamily: "var(--font-cinzel)" }}
+                  className="text-[11px] uppercase tracking-wider text-brand-gold font-medium hidden sm:inline"
+                >
+                  Account
+                </span>
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="text-xs font-sans tracking-[0.15em] uppercase text-brand-cream/90 hover:text-brand-gold transition-colors px-3 py-1.5 border border-white/20 hover:border-brand-gold/60"
+              >
+                Sign In
+              </Link>
+            )}
 
             <button
               onClick={() => handleNavigate("booking")}
@@ -618,23 +646,37 @@ const Navigation = ({ currentRoute, setRoute }) => {
                 ))}
 
                 {/* Direct Portals Section */}
-                <div className="flex flex-wrap gap-4 mt-6 pt-6 border-t border-white/10">
-                  <Link
-                    href="/login"
-                    onClick={() => setIsOpen(false)}
-                    className="text-xs font-sans tracking-widest uppercase text-brand-gold hover:text-white transition-colors py-2 px-4 border border-brand-gold/40"
-                  >
-                    Client Sign In
-                  </Link>
-                  {/* Customer Account button — hidden
-                  <Link
-                    href="/account"
-                    onClick={() => setIsOpen(false)}
-                    className="text-xs font-sans tracking-widest uppercase text-brand-cream/80 hover:text-brand-gold transition-colors py-2 px-4 border border-white/10"
-                  >
-                    Customer Account
-                  </Link>
-                  */}
+                <div className="flex flex-wrap items-center gap-4 mt-6 pt-6 border-t border-white/10">
+                  {isLoggedIn ? (
+                    <>
+                      <button
+                        onClick={() => {
+                          setIsOpen(false);
+                          setIsAccountOpen(true);
+                        }}
+                        className="text-xs font-sans tracking-widest uppercase text-brand-black bg-brand-gold hover:bg-white font-semibold transition-colors py-2.5 px-5"
+                      >
+                        Member Dashboard ({user.name.split(" ")[0]})
+                      </button>
+                      <button
+                        onClick={() => {
+                          logout();
+                          setIsOpen(false);
+                        }}
+                        className="text-xs font-sans tracking-widest uppercase text-brand-muted hover:text-red-400 transition-colors py-2.5 px-4 border border-white/10 hover:border-red-500/30"
+                      >
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={() => setIsOpen(false)}
+                      className="text-xs font-sans tracking-widest uppercase text-brand-gold hover:text-white transition-colors py-2 px-4 border border-brand-gold/40"
+                    >
+                      Client Sign In
+                    </Link>
+                  )}
                 </div>
 
                 {/* Mobile Book Now Link in Menu */}
@@ -668,6 +710,12 @@ const Navigation = ({ currentRoute, setRoute }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Synchronized Account Modal */}
+      <AccountModal
+        isOpen={isAccountOpen}
+        onClose={() => setIsAccountOpen(false)}
+      />
     </>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Navbar from "@/app/components/Navbar";
+import AccountHeader from "../AccountHeader";
 import Footer from "@/app/components/Footer";
 import AccountSidebar from "../AccountSidebar";
 import Link from "next/link";
@@ -37,8 +37,8 @@ export default function BookingsPage() {
 
   return (
     <>
-      <Navbar />
-      <main className="pt-28 pb-20 bg-brand-black min-h-screen">
+      <AccountHeader />
+      <main className="pt-24 pb-20 bg-brand-black min-h-screen">
         <div className="container-luxury">
           <div className="flex flex-col lg:flex-row gap-8">
             <AccountSidebar />

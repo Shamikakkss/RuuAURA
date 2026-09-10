@@ -3,6 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, ChevronRight, LogIn } from "lucide-react";
 
+import { loginUser } from "@/lib/authStore";
+
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPass, setShowPass] = useState(false);
@@ -13,14 +15,20 @@ export default function LoginPage() {
     e.preventDefault();
     setStatus("loading");
     setError("");
-    await new Promise((r) => setTimeout(r, 1400));
-    // Simulate wrong creds for demo
-    if (form.password.length < 6) {
-      setError("Invalid email or password. Please try again.");
+    await new Promise((r) => setTimeout(r, 800));
+    // Accept valid demo password
+    if (form.password.length < 4) {
+      setError("Please enter a password with at least 4 characters.");
       setStatus("idle");
     } else {
+      const emailName = form.email.split("@")[0] || "Jane Sterling";
+      const formattedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+      loginUser({
+        email: form.email,
+        name: formattedName.includes(".") ? formattedName.replace(".", " ") : (form.email.includes("jane") ? "Jane Sterling" : formattedName),
+        initials: (form.email.includes("jane") ? "JS" : formattedName.slice(0, 2).toUpperCase()),
+      });
       setStatus("success");
-      // In real app: redirect to account dashboard
     }
   };
 

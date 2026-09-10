@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Navbar from "@/app/components/Navbar";
+import AccountHeader from "../AccountHeader";
 import Footer from "@/app/components/Footer";
 import AccountSidebar from "../AccountSidebar";
 import { Bell, Calendar, CheckCircle, Info } from "lucide-react";
@@ -19,8 +19,8 @@ export default function NotificationsPage() {
 
   return (
     <>
-      <Navbar />
-      <main className="pt-28 pb-20 bg-brand-black min-h-screen">
+      <AccountHeader />
+      <main className="pt-24 pb-20 bg-brand-black min-h-screen">
         <div className="container-luxury">
           <div className="flex flex-col lg:flex-row gap-8">
             <AccountSidebar />

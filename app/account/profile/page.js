@@ -1,25 +1,37 @@
 "use client";
-import { useState } from "react";
-import Navbar from "@/app/components/Navbar";
+import { useState, useEffect } from "react";
+import AccountHeader from "../AccountHeader";
 import Footer from "@/app/components/Footer";
 import AccountSidebar from "../AccountSidebar";
 import { Save, CheckCircle } from "lucide-react";
+import { useAuth } from "@/lib/authStore";
 
 export default function ProfilePage() {
+  const { user, updateProfile } = useAuth();
   const [form, setForm] = useState({
-    name: "Jane Sterling",
-    email: "jane.sterling@example.com",
-    phone: "+94 77 123 4567",
-    whatsapp: "+94 77 123 4567",
+    name: user.name || "Jane Sterling",
+    email: user.email || "jane.sterling@example.com",
+    phone: user.phone || "+94 77 123 4567",
+    whatsapp: user.whatsapp || "+94 77 123 4567",
   });
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
+  useEffect(() => {
+    setForm({
+      name: user.name || "Jane Sterling",
+      email: user.email || "jane.sterling@example.com",
+      phone: user.phone || "+94 77 123 4567",
+      whatsapp: user.whatsapp || "+94 77 123 4567",
+    });
+  }, [user]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 1200));
+    await new Promise((r) => setTimeout(r, 600));
+    updateProfile(form);
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
@@ -35,8 +47,8 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Navbar />
-      <main className="pt-28 pb-20 bg-brand-black min-h-screen">
+      <AccountHeader />
+      <main className="pt-24 pb-20 bg-brand-black min-h-screen">
         <div className="container-luxury">
           <div className="flex flex-col lg:flex-row gap-8">
             <AccountSidebar />

@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, ChevronRight, User } from "lucide-react";
+import { Menu, X, ChevronRight, Sparkles } from "lucide-react";
+import { useAuth } from "@/lib/authStore";
+import AccountModal from "@/app/components/AccountModal";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -13,14 +15,12 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-// ── Demo auth flag — set to false to show Sign In ──
-const isLoggedIn = true;
-const USER = { name: "Jane Sterling", initials: "JS" };
-
 export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const { isLoggedIn, user } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -91,19 +91,27 @@ export default function Navbar() {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
             {isLoggedIn ? (
-              /* ── Profile Avatar ── */
-              <Link
-                href="/account"
-                title={USER.name}
-                className="w-9 h-9 rounded-full bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center hover:bg-brand-gold/25 hover:border-brand-gold transition-all duration-300 group"
+              /* ── Profile Avatar with Modal Trigger ── */
+              <button
+                onClick={() => setIsAccountModalOpen(true)}
+                title={`${user.name} — Member Portal`}
+                className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/40 hover:bg-brand-gold/20 hover:border-brand-gold transition-all duration-300 group"
               >
+                <div className="w-7 h-7 rounded-full bg-brand-gold/20 border border-brand-gold/50 flex items-center justify-center">
+                  <span
+                    className="text-[10px] font-bold text-brand-gold group-hover:text-brand-gold-light transition-colors"
+                    style={{ fontFamily: "var(--font-cinzel)" }}
+                  >
+                    {user.initials || "JS"}
+                  </span>
+                </div>
                 <span
-                  className="text-[11px] font-bold text-brand-gold group-hover:text-brand-gold-light transition-colors"
                   style={{ fontFamily: "var(--font-cinzel)" }}
+                  className="text-xs uppercase tracking-wider text-brand-gold font-medium pr-1"
                 >
-                  {USER.initials}
+                  Account
                 </span>
-              </Link>
+              </button>
             ) : (
               <Link
                 href="/login"
@@ -183,19 +191,21 @@ export default function Navbar() {
             {/* Mobile CTAs */}
             <div className="p-6 flex flex-col gap-3 border-t border-brand-border">
               {isLoggedIn ? (
-                /* ── My Account pill ── */
-                <Link
-                  href="/account"
-                  onClick={() => setMenuOpen(false)}
+                /* ── My Account pill with modal trigger ── */
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setIsAccountModalOpen(true);
+                  }}
                   className="btn-luxury border border-brand-gold/40 text-brand-gold px-6 py-4 rounded-sm w-full hover:bg-brand-gold/10 flex items-center justify-center gap-2"
                 >
                   <div className="w-6 h-6 rounded-full bg-brand-gold/20 flex items-center justify-center">
                     <span className="text-[9px] font-bold" style={{ fontFamily: "var(--font-cinzel)" }}>
-                      {USER.initials}
+                      {user.initials || "JS"}
                     </span>
                   </div>
-                  My Account
-                </Link>
+                  My Account Dashboard
+                </button>
               ) : (
                 <Link
                   href="/login"
@@ -217,7 +227,12 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Synchronized Account Modal */}
+      <AccountModal
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
+      />
     </>
   );
 }
-

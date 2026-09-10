@@ -1,13 +1,14 @@
 "use client";
 import { useState } from "react";
-import Navbar from "@/app/components/Navbar";
+import AccountHeader from "./AccountHeader";
 import Footer from "@/app/components/Footer";
 import AccountSidebar from "./AccountSidebar";
 import Link from "next/link";
 import {
   Calendar, Bell, ChevronRight, Clock, CheckCircle,
-  AlertCircle, XCircle, Sparkles, ArrowRight, User,
+  AlertCircle, XCircle, ArrowRight, User, Sparkles
 } from "lucide-react";
+import { useAuth } from "@/lib/authStore";
 import { getStoredBookings, updateStoredBooking } from "@/lib/demoStore";
 
 function StatusBadge({ status }) {
@@ -30,6 +31,7 @@ function StatusBadge({ status }) {
 }
 
 export default function AccountPage() {
+  const { user } = useAuth();
   const [bookings, setBookings] = useState(() => getStoredBookings());
   const upcoming  = bookings.filter((b) => b.status !== "Completed" && b.status !== "Cancelled");
   const next      = upcoming[0];
@@ -41,36 +43,53 @@ export default function AccountPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-brand-black">
-      <Navbar />
+      <AccountHeader />
 
-      <main className="flex-1 pt-28 pb-24">
+      <main className="flex-1 pt-24 pb-24">
         <div className="container-luxury">
           <div className="flex flex-col lg:flex-row gap-8 items-start">
             <AccountSidebar />
 
             <div className="flex-1 flex flex-col gap-6 min-w-0">
 
-              {/* ── Welcome Banner ── */}
-              <div className="relative overflow-hidden glass-card rounded-sm p-8">
-                {/* Decorative glows */}
-                <div className="pointer-events-none absolute -top-10 -right-10 w-64 h-64 rounded-full bg-brand-gold/8 blur-[80px]" />
-                <div className="pointer-events-none absolute bottom-0 left-1/3 w-48 h-32 rounded-full bg-brand-gold/4 blur-[60px]" />
-                {/* Gold shimmer line at top */}
-                <div className="absolute top-0 left-0 right-0 h-px gold-line" />
+              {/* ── Welcome Banner (editorial hero treatment) ── */}
+              <div className="relative overflow-hidden rounded-sm border border-brand-border min-h-[260px] flex items-center">
+                {/* Background image */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center saturate-[.9]"
+                  style={{
+                    backgroundImage:
+                      "url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1600&auto=format&fit=crop')",
+                  }}
+                />
+                {/* Scrim for legibility */}
+                <div className="absolute inset-0 bg-gradient-to-r from-brand-black/95 via-brand-black/60 to-brand-black/25" />
+                {/* Decorative crossed gold lines, echoing the homepage hero */}
+                <svg
+                  className="absolute -top-16 left-[6%] w-32 h-[150%] opacity-40 pointer-events-none"
+                  viewBox="0 0 100 300"
+                  aria-hidden="true"
+                >
+                  <line x1="0" y1="0" x2="100" y2="300" stroke="#c5a365" strokeWidth="1" />
+                  <line x1="100" y1="0" x2="0" y2="300" stroke="#c5a365" strokeWidth="1" />
+                </svg>
 
-                <div className="relative z-10">
-                  <p className="section-label mb-3 flex items-center gap-2">
-                    <Sparkles size={11} className="text-brand-gold" />
-                    Welcome Back
+                <div className="relative z-10 p-8 md:p-11">
+                  <p
+                    className="text-[11px] tracking-[0.3em] uppercase text-brand-gold mb-4"
+                    style={{ fontFamily: "var(--font-cinzel)" }}
+                  >
+                    Sanctuary Member Dashboard
                   </p>
                   <h1
-                    className="text-3xl md:text-4xl font-semibold text-brand-cream mb-2"
-                    style={{ fontFamily: "var(--font-serif)" }}
+                    className="font-semibold text-brand-cream leading-[1.05] mb-4"
+                    style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(32px, 5vw, 50px)" }}
                   >
-                    Jane Sterling
+                    Welcome back,
+                    <em className="block italic font-medium">{user.name ? user.name.split(" ")[0] : "Jane"}.</em>
                   </h1>
-                  <div className="flex flex-wrap items-center gap-2 text-sm text-brand-muted">
-                    <span>Sanctuary Member since 2024</span>
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-brand-cream-muted">
+                    <span>Member since 2024</span>
                     <span className="inline-block w-px h-3 bg-brand-border" />
                     <span>{bookings.length} appointments</span>
                   </div>
