@@ -390,6 +390,40 @@ export default function AccountModal({ isOpen, onClose }) {
                   </div>
                 )}
 
+                {/* ── Personal Profile & Contact Overview ── */}
+                <div className="glass-card rounded-sm p-6 border border-[#2a2a32] bg-[#111115]">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="section-label" style={{ fontFamily: "var(--font-cinzel)" }}>
+                      ✦&nbsp;Member Information & Contact
+                    </p>
+                    <button
+                      onClick={() => setActiveTab("profile")}
+                      className="text-xs text-[#c5a365] hover:text-[#e2c88f] transition-colors flex items-center gap-1 font-semibold uppercase tracking-wider"
+                    >
+                      Edit Details <ChevronRight size={12} />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="p-3.5 rounded-sm bg-[#18181c] border border-white/5">
+                      <p className="text-[10px] uppercase tracking-wider text-[#83838d] font-cinzel">Full Name</p>
+                      <p className="text-sm font-serif font-medium text-[#f5f2eb] mt-1 truncate">{user?.name || "Jane Sterling"}</p>
+                    </div>
+                    <div className="p-3.5 rounded-sm bg-[#18181c] border border-white/5">
+                      <p className="text-[10px] uppercase tracking-wider text-[#83838d] font-cinzel">Email Address</p>
+                      <p className="text-sm font-sans text-[#c8c4bc] mt-1 truncate">{user?.email || "jane.sterling@example.com"}</p>
+                    </div>
+                    <div className="p-3.5 rounded-sm bg-[#18181c] border border-white/5">
+                      <p className="text-[10px] uppercase tracking-wider text-[#83838d] font-cinzel">Mobile Phone</p>
+                      <p className="text-sm font-mono text-[#f5f2eb] mt-1">{user?.phone || "+94 77 123 4567"}</p>
+                    </div>
+                    <div className="p-3.5 rounded-sm bg-[#18181c] border border-white/5">
+                      <p className="text-[10px] uppercase tracking-wider text-[#83838d] font-cinzel">WhatsApp</p>
+                      <p className="text-sm font-mono text-[#c5a365] mt-1">{user?.whatsapp || "+94 77 123 4567"}</p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* ── Quick Actions ── */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Link
@@ -427,9 +461,9 @@ export default function AccountModal({ isOpen, onClose }) {
                         className="text-sm font-semibold text-[#f5f2eb] mb-0.5 group-hover:text-[#c5a365] transition-colors"
                         style={{ fontFamily: "var(--font-serif)" }}
                       >
-                        Update Profile
+                        Edit Contact Details
                       </h4>
-                      <p className="text-xs text-[#83838d]">Manage your contact information</p>
+                      <p className="text-xs text-[#83838d]">Update phone, WhatsApp & email</p>
                     </div>
                     <ArrowRight
                       size={16}
