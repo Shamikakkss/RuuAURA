@@ -626,6 +626,7 @@ const Navigation = ({ currentRoute, setRoute }) => {
                   >
                     Client Sign In
                   </Link>
+                  {/* Customer Account button — hidden
                   <Link
                     href="/account"
                     onClick={() => setIsOpen(false)}
@@ -633,6 +634,7 @@ const Navigation = ({ currentRoute, setRoute }) => {
                   >
                     Customer Account
                   </Link>
+                  */}
                 </div>
 
                 {/* Mobile Book Now Link in Menu */}
@@ -1175,18 +1177,23 @@ const BookingPage = ({ preSelectedService }) => {
               info@ruuaura.lk
             </p>
             {/* Simulated Map Box */}
-            <div className="w-full h-48 bg-brand-dark overflow-hidden relative group">
+            <a
+              href="https://maps.google.com"
+              target="_blank"
+              rel="noreferrer"
+              className="block w-full h-48 bg-brand-dark overflow-hidden relative group border border-brand-gold/20"
+            >
               <img
-                src="/images/gallery/sunriseforever-beauty-salon-4043096_1920.jpg"
-                alt="Map View"
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500"
+                src="/images/location/dehiwala-map-placeholder.jpg"
+                alt="Map View - 142 Galle Road, Dehiwala"
+                className="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
               />
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="bg-brand-black/80 px-4 py-2 text-xs uppercase tracking-widest text-brand-gold font-sans backdrop-blur-sm border border-brand-gold/30">
-                  View on Maps
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="bg-brand-black/85 group-hover:bg-brand-gold group-hover:text-brand-black px-4 py-2 text-xs uppercase tracking-widest text-brand-gold font-sans backdrop-blur-sm border border-brand-gold/30 transition-colors">
+                  View on Maps ↗
                 </div>
               </div>
-            </div>
+            </a>
           </div>
         </FadeIn>
       </div>
@@ -1558,13 +1565,13 @@ const LocationPage = ({ setRoute }) => {
 
         {/* Right column: Interactive Map Simulation */}
         <FadeIn delay={0.4} className="flex flex-col gap-6">
-          <div className="w-full h-[450px] bg-brand-dark border border-white/10 relative overflow-hidden group">
+          <div className="w-full h-[450px] bg-brand-dark border border-brand-gold/20 relative overflow-hidden group shadow-2xl">
             <img
-              src="/images/gallery/sunriseforever-beauty-salon-4043096_1920.jpg"
+              src="/images/location/dehiwala-sanctuary-map.jpg"
               alt="Dehiwala Sanctuary Location Map"
-              className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-700"
+              className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent opacity-80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent pointer-events-none" />
             
             <div className="absolute top-6 left-6 bg-brand-black/90 p-4 border border-brand-gold/30 backdrop-blur-md max-w-xs">
               <p className="text-xs font-serif text-brand-gold mb-1">RuuAURA Sanctuary</p>

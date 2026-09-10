@@ -226,6 +226,27 @@ select:focus-visible {
   margin-inline: auto;
 }
 
+.footer-cta-bar {
+  padding-block: 0;
+}
+
+.footer-cta-inner {
+  min-height: 156px;
+  padding-block: 2.5rem;
+}
+
+.footer-main {
+  padding-block: 4.5rem;
+}
+
+.footer-bottom {
+  padding-block: 0;
+}
+
+.footer-bottom-inner {
+  padding-block: 1.5rem;
+}
+
 .section-pad {
   padding-block: clamp(5rem, 10vw, 9rem);
 }
@@ -233,6 +254,15 @@ select:focus-visible {
 @media (max-width: 640px) {
   .container-luxury {
     width: min(100% - 2rem, 82rem);
+  }
+
+  .footer-cta-inner {
+    min-height: 0;
+    padding-block: 2.25rem;
+  }
+
+  .footer-main {
+    padding-block: 3.5rem;
   }
 }
 

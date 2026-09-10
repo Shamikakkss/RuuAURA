@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronRight, User } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -12,6 +12,10 @@ const NAV_LINKS = [
   { href: "/location", label: "Location" },
   { href: "/contact", label: "Contact" },
 ];
+
+// ── Demo auth flag — set to false to show Sign In ──
+const isLoggedIn = true;
+const USER = { name: "Jane Sterling", initials: "JS" };
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -86,13 +90,29 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-xs tracking-widest uppercase text-brand-muted hover:text-brand-cream transition-colors duration-300"
-              style={{ fontFamily: "var(--font-cinzel)" }}
-            >
-              Sign In
-            </Link>
+            {isLoggedIn ? (
+              /* ── Profile Avatar ── */
+              <Link
+                href="/account"
+                title={USER.name}
+                className="w-9 h-9 rounded-full bg-brand-gold/15 border border-brand-gold/40 flex items-center justify-center hover:bg-brand-gold/25 hover:border-brand-gold transition-all duration-300 group"
+              >
+                <span
+                  className="text-[11px] font-bold text-brand-gold group-hover:text-brand-gold-light transition-colors"
+                  style={{ fontFamily: "var(--font-cinzel)" }}
+                >
+                  {USER.initials}
+                </span>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="text-xs tracking-widest uppercase text-brand-muted hover:text-brand-cream transition-colors duration-300"
+                style={{ fontFamily: "var(--font-cinzel)" }}
+              >
+                Sign In
+              </Link>
+            )}
             <Link
               href="/booking"
               className="btn-luxury bg-brand-gold text-brand-black px-6 py-3 rounded-sm hover:bg-brand-gold-light"
@@ -162,13 +182,29 @@ export default function Navbar() {
 
             {/* Mobile CTAs */}
             <div className="p-6 flex flex-col gap-3 border-t border-brand-border">
-              <Link
-                href="/login"
-                onClick={() => setMenuOpen(false)}
-                className="btn-luxury border border-brand-border text-brand-cream px-6 py-4 rounded-sm w-full hover:border-brand-gold hover:text-brand-gold"
-              >
-                Sign In
-              </Link>
+              {isLoggedIn ? (
+                /* ── My Account pill ── */
+                <Link
+                  href="/account"
+                  onClick={() => setMenuOpen(false)}
+                  className="btn-luxury border border-brand-gold/40 text-brand-gold px-6 py-4 rounded-sm w-full hover:bg-brand-gold/10 flex items-center justify-center gap-2"
+                >
+                  <div className="w-6 h-6 rounded-full bg-brand-gold/20 flex items-center justify-center">
+                    <span className="text-[9px] font-bold" style={{ fontFamily: "var(--font-cinzel)" }}>
+                      {USER.initials}
+                    </span>
+                  </div>
+                  My Account
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="btn-luxury border border-brand-border text-brand-cream px-6 py-4 rounded-sm w-full hover:border-brand-gold hover:text-brand-gold"
+                >
+                  Sign In
+                </Link>
+              )}
               <Link
                 href="/booking"
                 onClick={() => setMenuOpen(false)}
@@ -184,3 +220,4 @@ export default function Navbar() {
     </>
   );
 }
+

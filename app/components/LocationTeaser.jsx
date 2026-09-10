@@ -6,23 +6,33 @@ export default function LocationTeaser() {
     <section className="section-pad bg-brand-surface relative overflow-hidden">
       <div className="container-luxury">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Map Placeholder */}
+          {/* Map Image & Preview */}
           <div className="relative">
-            <div className="relative aspect-[4/3] bg-brand-card rounded-sm border border-brand-border overflow-hidden group">
-              <iframe
-                title="RuuAURA Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.7985!2d79.8613!3d6.9022!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwNTQnMDguMCJOIDc5wrA1MScwNi44IkU!5e0!3m2!1sen!2slk!4v1234567890"
-                className="w-full h-full opacity-70 group-hover:opacity-90 transition-opacity duration-500"
-                style={{ border: 0, filter: "invert(0.9) hue-rotate(180deg) saturate(0.3)" }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
+            <div className="relative aspect-[4/3] bg-brand-card rounded-sm border border-brand-gold/20 overflow-hidden group shadow-2xl">
+              <img
+                src="/images/location/dehiwala-sanctuary-map.jpg"
+                alt="RuuAURA Sanctuary Map - 142 Galle Road, Dehiwala"
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
               />
-              {/* Pin overlay */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-10 h-10 bg-brand-gold rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                  <MapPin size={18} className="text-brand-black" />
-                </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-transparent to-transparent pointer-events-none" />
+              
+              {/* Badge */}
+              <div className="absolute top-4 left-4 bg-brand-black/90 px-4 py-2.5 border border-brand-gold/30 backdrop-blur-md">
+                <p className="text-[11px] font-serif text-brand-gold font-medium tracking-wide">RuuAURA Sanctuary</p>
+                <p className="text-[10px] font-sans text-brand-cream/80">142 Galle Road, Dehiwala</p>
+              </div>
+
+              {/* View interactive on Maps */}
+              <div className="absolute bottom-4 right-4">
+                <a
+                  href="https://maps.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 bg-brand-gold/90 hover:bg-brand-gold text-brand-black px-4 py-2 text-[11px] uppercase tracking-widest font-semibold transition-colors shadow-lg"
+                >
+                  <MapPin size={13} />
+                  Open Live Map
+                </a>
               </div>
             </div>
           </div>

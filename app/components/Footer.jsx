@@ -19,13 +19,13 @@ const HOURS = [
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-brand-dark border-t border-brand-border relative overflow-hidden">
-      {/* Ambient Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brand-gold/5 rounded-full blur-[100px] pointer-events-none" />
+    <footer className="bg-brand-dark border-t border-brand-border relative overflow-hidden isolate" style={{ zIndex: 1 }}>
+      {/* Ambient Glow — behind all content */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brand-gold/5 rounded-full blur-[100px] pointer-events-none z-0" />
 
       {/* Booking CTA Bar */}
-      <div className="border-b border-brand-border">
-        <div className="container-luxury py-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="footer-cta-bar border-b border-brand-border">
+          <div className="container-luxury footer-cta-inner flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="section-label mb-2">Ready for your transformation?</p>
             <h3
@@ -45,8 +45,8 @@ export default function Footer() {
       </div>
 
       {/* Main Footer Content */}
-      <div className="container-luxury py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="container-luxury footer-main relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex flex-col leading-none mb-6">
@@ -101,7 +101,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-brand-muted hover:text-brand-cream transition-colors duration-300"
+                    className="text-sm text-brand-muted hover:text-brand-cream transition-colors duration-300 whitespace-nowrap"
                   >
                     {link.label}
                   </Link>
@@ -170,8 +170,8 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-brand-border">
-        <div className="container-luxury py-6 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="footer-bottom border-t border-brand-border relative z-10">
+          <div className="container-luxury footer-bottom-inner flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex flex-col gap-1 text-center md:text-left">
             <p className="text-xs text-brand-muted">
               © {year} RuuAURA. All rights reserved.
