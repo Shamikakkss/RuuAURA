@@ -656,7 +656,7 @@ const Navigation = ({ currentRoute, setRoute }) => {
                         }}
                         className="text-xs font-sans tracking-widest uppercase text-brand-black bg-brand-gold hover:bg-white font-semibold transition-colors py-2.5 px-5"
                       >
-                        Member Dashboard ({user.name.split(" ")[0]})
+                        Member Dashboard ({user?.name ? user.name.split(" ")[0] : "Member"})
                       </button>
                       <button
                         onClick={() => {

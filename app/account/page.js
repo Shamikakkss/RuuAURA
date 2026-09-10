@@ -147,14 +147,12 @@ export default function AccountPage() {
                         {next.serviceTitle}
                       </h3>
                       <p className="text-sm text-brand-muted mb-4">
-                        with {next.artisanName} · {next.duration}
+                        with {next.artisanName || next.artisan || "Master Artisan"} · {next.duration}
                       </p>
                       <div className="flex flex-wrap items-center gap-3">
                         <span className="inline-flex items-center gap-1.5 text-sm text-brand-cream-muted">
                           <Calendar size={13} className="text-brand-gold shrink-0" />
-                          {new Date(next.date + "T12:00:00").toLocaleDateString("en-US", {
-                            weekday: "long", month: "long", day: "numeric",
-                          })}
+                          {next.date}
                         </span>
                         <span className="inline-flex items-center gap-1.5 text-sm text-brand-cream-muted">
                           <Clock size={13} className="text-brand-gold shrink-0" />
